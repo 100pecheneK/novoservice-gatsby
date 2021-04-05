@@ -14,7 +14,7 @@ export default function HomePage({ siteInfo, settings }: HomePageProps) {
   return (
     <div className='container h-screen grid place-items-center'>
       <div className='flex flex-col'>
-        <H1 text={settings.frontmatter.welcomeTitle} />
+        <H1 text={settings.welcomeTitle} />
         <div className='xl:flex justify-center'>
           {siteInfo.nodes.map(({ frontmatter: { _link, ...cardData }, id }) => (
             <AnimatePresence key={id}>
