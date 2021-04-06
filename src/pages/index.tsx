@@ -33,7 +33,6 @@ export type HomeProps = {
 
 export default function Home({ data }: HomeProps) {
   const { siteInfo, contentfulSettings } = data
-  console.log("Home -> contentfulSettings", contentfulSettings)
 
   return <HomePage siteInfo={siteInfo} settings={contentfulSettings} />
 }

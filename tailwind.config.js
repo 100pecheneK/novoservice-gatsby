@@ -1,5 +1,5 @@
 module.exports = {
-  purge: ['./src/**/*.js', './src/**/*.jsx', './src/**/*.ts', './src/**/*.tsx'],
+  purge: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     container: {
       center: true,
@@ -9,7 +9,7 @@ module.exports = {
   variants: {
     extend: {
       opacity: ['disabled'],
-    }
+    },
   },
   plugins: [require('@tailwindcss/custom-forms')],
 }
