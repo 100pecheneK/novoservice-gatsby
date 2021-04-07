@@ -77,7 +77,7 @@ export default function ServicesSection({
     const body = getBody(selectedSubservices)
     const text = `${subject}.%0A${body}`
     window.open(
-      `https://web.whatsapp.com/send?phone=${contacts.phonenumber}&text=${text}`
+      `https://api.whatsapp.com/send?phone=${contacts.phonenumber}&text=${text}`
     )
   }
   function sendToVk() {

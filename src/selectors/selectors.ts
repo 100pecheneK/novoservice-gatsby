@@ -4,6 +4,7 @@ import { GatsbyImageProps } from 'gatsby-plugin-image'
 
 export const frontmatter = (data: PageDataType) =>
   data.markdownRemark.frontmatter
+export const title = (data: PageDataType) => frontmatter(data).title
 export const image = (data: PageDataType) =>
   frontmatter(data).logo.childImageSharp.gatsbyImageData
 export const timetable = (data: PageDataType) => frontmatter(data).timetable

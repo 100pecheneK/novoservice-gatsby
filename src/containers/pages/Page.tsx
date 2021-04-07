@@ -18,10 +18,11 @@ export default function Page({ data }: { data: PageDataType }) {
   const placeData = selectors.placeData(data)
   const timetable = selectors.timetable(data)
   const contactsData = selectors.contactsData(data)
+  const title = selectors.title(data)
 
   return (
     <WorkStatusProvider value={{ timetable }}>
-      <PageLayout>
+      <PageLayout pageName={title}>
         <MainSection mainData={mainData} />
         <ServicesSection
           servicesContacts={servicesContacts}

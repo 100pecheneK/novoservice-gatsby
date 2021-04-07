@@ -13,6 +13,7 @@ export const query = graphql`
       frontmatter {
         _link
         logoAlt
+        title
         mainH1
         map
         mainH2

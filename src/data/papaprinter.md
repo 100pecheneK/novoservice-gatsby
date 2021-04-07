@@ -27,7 +27,7 @@ links:
     {
       type: 'whatsapp',
       text: '+7 (996) 184 02-10',
-      href: 'https://web.whatsapp.com/send?phone=+79961840210&text=',
+      href: 'https://api.whatsapp.com/send?phone=+79961840210&text=',
       icon: 'Whatsapp',
     },
     {

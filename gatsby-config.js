@@ -21,6 +21,7 @@ module.exports = {
         path: `${__dirname}/src/data/`,
       },
     },
+    'gatsby-plugin-react-helmet',
     'gatsby-plugin-image',
     'gatsby-transformer-sharp',
     'gatsby-transformer-remark',

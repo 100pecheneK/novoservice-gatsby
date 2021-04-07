@@ -12,6 +12,7 @@ export const query = graphql`
     markdownRemark(frontmatter: { _documentName: { eq: "papaprinter" } }) {
       frontmatter {
         _link
+        title
         logoAlt
         mainH1
         mainH2
