@@ -2,6 +2,7 @@ import { graphql } from 'gatsby'
 import React from 'react'
 import HomePage from '@containers/pages/HomePage'
 import { GatsbyImageProps } from 'gatsby-plugin-image'
+import SendButton from '@components/SendButton'
 
 export type SiteInfoType = {
   nodes: {
@@ -28,10 +29,7 @@ export type HomeProps = {
 }
 
 export default function Home({ data }: HomeProps) {
-  const {
-    siteInfo,
-    settings,
-  } = data
+  const { siteInfo, settings } = data
 
   return <HomePage siteInfo={siteInfo} settings={settings} />
 }
