@@ -111,5 +111,5 @@ services:
       vk: 'https://vk.com/market-102208648?w=product-102208648_1013469%2Fquery',
     },
   ]
-map: <div style="position:relative;overflow:hidden;"><a href="https://yandex.ru/maps/11170/novouralsk/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Новоуральск</a><a href="https://yandex.ru/maps/11170/novouralsk/house/ulitsa_pobedy_5/YkkYdgBpS0UOQFttfX51cHRnbQ==/inside/?ll=60.079209%2C57.241849&tab=inside&utm_medium=mapframe&utm_source=maps&z=18" style="color:#eee;font-size:12px;position:absolute;top:14px;">Улица Победы, 5 — Яндекс.Карты</a><iframe src="https://yandex.ru/map-widget/v1/-/CCUU64CxpC" width="560" height="400" frameborder="1" allowfullscreen="true" style="position:relative;"></iframe></div>
+map: <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d8635.493120988178!2d60.0791054!3d57.2417453!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x7feafce465bd811!2z0KTQvtGC0L7QvdC-0LLQuNC6!5e0!3m2!1sru!2sru!4v1617792394219!5m2!1sru!2sru" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
 ---
