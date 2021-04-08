@@ -7,6 +7,7 @@
   "scripts": {
     "build": "gatsby build",
     "develop": "gatsby develop -o",
+    "develop-local": "gatsby develop -o -H 0.0.0.0",
     "start": "yarn run develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean"

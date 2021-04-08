@@ -96,7 +96,7 @@ services:
     },
     {
       title: 'Печать на слюнявчике',
-      subtitle: 'Что подарить на годовщину вашей свадьбы? Или ребенку на день рождения? Несите свое фото! Напечатаем его на пазле!',
+      subtitle: 'Идете на смотрины? Или просто решили сделать уникальный подарок своему малышу? Заказывайте печать на слюнявчике!',
       image: '../images/services/photonovik/слюнявчик.jpg',
       imageAlt: 'Печать на слюнявчике',
       subservices: [],
@@ -111,5 +111,5 @@ services:
       vk: 'https://vk.com/market-102208648?w=product-102208648_1013469%2Fquery',
     },
   ]
-map: <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d8635.493120988178!2d60.0791054!3d57.2417453!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x7feafce465bd811!2z0KTQvtGC0L7QvdC-0LLQuNC6!5e0!3m2!1sru!2sru!4v1617792394219!5m2!1sru!2sru" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+map: <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d8635.493120988178!2d60.0791054!3d57.2417453!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x7feafce465bd811!2z0KTQvtGC0L7QvdC-0LLQuNC6!5e0!3m2!1sru!2sru!4v1617792394219!5m2!1sru!2sru" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
 ---

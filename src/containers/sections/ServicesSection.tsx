@@ -21,10 +21,9 @@ export default function ServicesSection({
   servicesContacts,
 }: {
   servicesData: ServiceDataType[]
-  contacts: { email: string; phonenumber: string }
+  contacts: { email: string; phonenumber: string; whatsapp: string }
   servicesContacts: ['vk' | 'email' | 'whatsapp']
 }) {
-  console.log('servicesData', servicesData)
   const [
     selectedServiceId,
     setSelectedServiceId,
@@ -77,7 +76,7 @@ export default function ServicesSection({
     const body = getBody(selectedSubservices)
     const text = `${subject}.%0A${body}`
     window.open(
-      `https://api.whatsapp.com/send?phone=${contacts.phonenumber}&text=${text}`
+      `${contacts.whatsapp}${text}`
     )
   }
   function sendToVk() {
@@ -183,7 +182,6 @@ export default function ServicesSection({
                         {selectedServiceId.title}
                       </motion.h4>
                       <ul className='mt-4 text-lg'>
-
                         {selectedServiceId.subservices?.map(
                           (subservice, idx) => {
                             const active = selectedSubserviceIdxs.includes(idx)

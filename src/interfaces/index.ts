@@ -30,7 +30,7 @@ export type LinkType = {
   text: string
   href: string
   icon: AvailableIcons
-  type: 'phonenumber' | 'email' | 'vk'
+  type: 'phonenumber' | 'email' | 'vk' | 'whatsapp'
 }
 export type TimeTableWorkDay = {
   day: string

@@ -22,6 +22,8 @@ export const email = (data: PageDataType) =>
   links(data).find(link => link.type === 'email')?.href || ''
 export const phonenumber = (data: PageDataType) =>
   links(data).find(link => link.type === 'phonenumber')?.href || ''
+export const whatsapp = (data: PageDataType) =>
+  links(data).find(link => link.type === 'whatsapp')?.href || ''
 export const mainShortAddres = (data: PageDataType) =>
   frontmatter(data).mainShortAddres
 export const servicesData = (data: PageDataType): ServiceDataType[] =>
@@ -79,7 +81,7 @@ export type LinkType = {
   text: string
   href: string
   icon: AvailableIcons
-  type: 'phonenumber' | 'email' | 'vk'
+  type: 'phonenumber' | 'email' | 'vk' | 'whatsapp'
 }
 export type TimeTableWorkDay = {
   day: string

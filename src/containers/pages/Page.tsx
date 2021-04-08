@@ -13,6 +13,7 @@ export default function Page({ data }: { data: PageDataType }) {
   const mainData = selectors.mainData(data)
   const email = selectors.email(data)
   const phonenumber = selectors.phonenumber(data)
+  const whatsapp = selectors.whatsapp(data)
   const servicesData = selectors.servicesData(data)
   const servicesContacts = selectors.servicesContacts(data)
   const placeData = selectors.placeData(data)
@@ -27,7 +28,7 @@ export default function Page({ data }: { data: PageDataType }) {
         <ServicesSection
           servicesContacts={servicesContacts}
           servicesData={servicesData}
-          contacts={{ email, phonenumber }}
+          contacts={{ email, phonenumber, whatsapp }}
         />
         <Element name='timetable'>
           <PlaceSection placeData={placeData} />

@@ -8,8 +8,9 @@ module.exports = {
   },
   variants: {
     extend: {
+      width: ['first'],
       opacity: ['disabled'],
-    }
+    },
   },
   plugins: [require('@tailwindcss/custom-forms')],
 }
