@@ -14,7 +14,7 @@ export default function WorkStatus({ timetable }: {timetable: TimeTableType}) {
       >
         {workStatus.current.isOpen ? 'Открыто' : 'Закрыто'}
       </b>
-      {workStatus.current.isOpen ? 'Закроется' : 'Откроется завтра'} в&nbsp;
+      {workStatus.current.isOpen ? 'Закроется' : 'Откроется'} в&nbsp;
       {workStatus.current.work}
     </>
   )
