@@ -8,15 +8,10 @@ export default function WorkStatus({
   timetable: TimeTableType
 }) {
   const workStatus = getWorkStatus(timetable)
-  console.log("workStatus", workStatus)
-
+  const statusColor = ['text-red-600', 'text-green-600']
   return (
     <>
-      <b
-        className={`mr-2 ${
-          workStatus.isOpen ? 'text-green-600' : 'text-red-600'
-        }`}
-      >
+      <b className={`mr-2 ${statusColor[+workStatus.isOpen]}`}>
         {workStatus.isOpen ? 'Открыто' : 'Закрыто'}
       </b>
       {workStatus.isOpen ? 'Закроется' : 'Откроется'} в&nbsp;

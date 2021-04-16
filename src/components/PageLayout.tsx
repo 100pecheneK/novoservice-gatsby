@@ -8,7 +8,6 @@ export default function PageLayout({
   children: React.ReactNode
   pageName: string
 }) {
-  console.log('title', pageName)
   return (
     <>
       <Helmet>
