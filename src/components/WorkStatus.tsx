@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import getWorkStatus from '@utils/getWorkStatus'
+import React from 'react'
 import { TimeTableType } from 'selectors/selectors'
 
 export default function WorkStatus({
@@ -8,19 +8,17 @@ export default function WorkStatus({
   timetable: TimeTableType
 }) {
   const workStatus = getWorkStatus(timetable)
-  console.log('workStatus', workStatus)
-  const [statusColor, setStatusColor] = useState('')
-  useEffect(() => {
-    setStatusColor(['text-red-600', 'text-green-600'][+workStatus.isOpen])
-  }, [workStatus])
-  console.log('statusColor', statusColor)
+  if (!workStatus) return <p>Загрузка расписания...</p>
   return (
-    <>
-      <b className={`mr-2 ${statusColor}`}>
+    <p>
+      <b
+        className='mr-2'
+        style={{ color: workStatus.isOpen ? '#07966a' : '#dc2626' }}
+      >
         {workStatus.isOpen ? 'Открыто' : 'Закрыто'}
       </b>
       {workStatus.isOpen ? 'Закроется' : 'Откроется'} в&nbsp;
       {workStatus.work}
-    </>
+    </p>
   )
 }
