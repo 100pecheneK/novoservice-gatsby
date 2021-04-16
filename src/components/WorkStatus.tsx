@@ -8,7 +8,6 @@ export default function WorkStatus({
   timetable: TimeTableType
 }) {
   const workStatus = getWorkStatus(timetable)
-  if (!workStatus) return <p>Загрузка расписания...</p>
   return (
     <p>
       <b
