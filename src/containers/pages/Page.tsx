@@ -9,7 +9,11 @@ import { WorkStatusProvider } from '@contexts/WorkStatusContext'
 import ContactsSection from '@containers/sections/ContactsSection'
 import { PageDataType } from 'selectors/selectors'
 
-export default function Page({ data }: { data: PageDataType }) {
+export default function Page({
+  pageContext: data,
+}: {
+  pageContext: PageDataType
+}) {
   const mainData = selectors.mainData(data)
   const email = selectors.email(data)
   const phonenumber = selectors.phonenumber(data)
@@ -18,12 +22,14 @@ export default function Page({ data }: { data: PageDataType }) {
   const placeData = selectors.placeData(data)
   const timetable = selectors.timetable(data)
   const contactsData = selectors.contactsData(data)
+  const serviceWelcomeText = selectors.serviceWelcomeText(data)
 
   return (
     <WorkStatusProvider value={{ timetable }}>
       <PageLayout>
         <MainSection mainData={mainData} />
         <ServicesSection
+          serviceWelcomeText={serviceWelcomeText}
           servicesContacts={servicesContacts}
           servicesData={servicesData}
           contacts={{ email, phonenumber }}

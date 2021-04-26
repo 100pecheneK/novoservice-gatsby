@@ -9,7 +9,7 @@ import { LinkType, TimeTableType } from 'selectors/selectors'
 
 export type MainSectionDataType = {
   links: LinkType[]
-  _link: string
+  link: string
   timetable: TimeTableType
   image: GatsbyImageProps['image']
   logoAlt: string
@@ -21,7 +21,7 @@ export type MainSectionDataType = {
 export default function MainSection({
   mainData: {
     links,
-    _link,
+    link,
     timetable,
     image,
     logoAlt,
@@ -33,9 +33,10 @@ export default function MainSection({
   mainData: MainSectionDataType
 }) {
   const [isHumburgerOpen, setIsHumburgerOpen] = useState(false)
+  console.log(link)
 
   return (
-    <motion.main layoutId={_link} className='flex flex-col h-full lg:h-screen'>
+    <motion.main layoutId={link} className='flex flex-col h-full lg:h-screen'>
       <Navbar
         links={links}
         isHumburgerOpen={isHumburgerOpen}
@@ -45,14 +46,14 @@ export default function MainSection({
       <div className='flex flex-col justify-between h-full'>
         <motion.div
           className='flex flex-grow flex-col mt-10 md:mt-0 md:flex-row md:items-center'
-          layoutId={'_link'}
+          layoutId={'link'}
         >
           <div className='md:w-2/5'>
-            <motion.div layoutId={`title-${_link}`}>
+            <motion.div layoutId={`title-${link}`}>
               <h1 className='text-6xl font-bold'>{mainH1}</h1>
               <h2 className='text-4xl font-bold'>{mainH2}</h2>
             </motion.div>
-            <motion.div layoutId={`subtitle-${_link}`} className='mt-5'>
+            <motion.div layoutId={`subtitle-${link}`} className='mt-5'>
               <p className='text-2xl'>{mainShortAddres}</p>
               <p className='text-2xl'>
                 <WorkStatus timetable={timetable} />
@@ -69,7 +70,7 @@ export default function MainSection({
             </motion.div>
           </div>
           <motion.div
-            layoutId={`logo-${_link}`}
+            layoutId={`logo-${link}`}
             className='md:w-3/5 order-first md:order-none'
           >
             <GatsbyImage image={image} alt={logoAlt} />

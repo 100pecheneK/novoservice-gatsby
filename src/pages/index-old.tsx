@@ -5,23 +5,23 @@ import { GatsbyImageProps } from 'gatsby-plugin-image'
 import { GatsbyImage } from 'gatsby-plugin-image'
 
 export type SiteInfoType = {
-  nodes: {
-    id: string
-    frontmatter: {
+  allContentfulServices: {
+    nodes: {
+      id: string
       title: string
-      _link: string
+      link: string
       subtitle: string
       logoAlt: string
       logo: {
-        childImageSharp: {
-          gatsbyImageData: GatsbyImageProps['image']
-        }
+        gatsbyImageData: GatsbyImageProps['image']
       }
-    }
-  }[]
+    }[]
+  }
 }
 export type SettingsType = {
-  welcomeTitle: string
+  contentfulSettings: {
+    welcomeTitle: string
+  }
 }
 
 export type HomeProps = {
@@ -34,7 +34,7 @@ export type HomeProps = {
 export default function Home({ data }: HomeProps) {
   const { siteInfo, contentfulSettings } = data
 
-  return <HomePage siteInfo={siteInfo} settings={contentfulSettings} />
+  return <HomePage pageContext={{ siteInfo, settings: contentfulSettings }} />
 }
 
 export const query = graphql`
