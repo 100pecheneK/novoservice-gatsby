@@ -22,12 +22,8 @@ export default function ServicesSection({
   servicesContacts,
 }: {
   servicesData: ServiceDataType[]
-<<<<<<< HEAD
-  contacts: { email: string; phonenumber: string }
   serviceWelcomeText: string
-=======
   contacts: { email: string; phonenumber: string; whatsapp: string }
->>>>>>> master
   servicesContacts: ['vk' | 'email' | 'whatsapp']
 }) {
   const [
