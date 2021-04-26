@@ -8,6 +8,7 @@ module.exports = {
   },
   variants: {
     extend: {
+      width: ['first'],
       opacity: ['disabled'],
     },
   },

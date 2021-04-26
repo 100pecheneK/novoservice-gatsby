@@ -1,21 +1,25 @@
-import React, { useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import getWorkStatus from '@utils/getWorkStatus'
 import { TimeTableType } from 'selectors/selectors'
 
-export default function WorkStatus({ timetable }: {timetable: TimeTableType}) {
-  const workStatus = useRef(getWorkStatus(timetable))
-
+export default function WorkStatus({
+  timetable,
+}: {
+  timetable: TimeTableType
+}) {
+  const workStatus = getWorkStatus(timetable)
+  const [statusColor, setStatusColor] = useState('')
+  useEffect(() => {
+    setStatusColor(['text-red-600', 'text-green-600'][+workStatus.isOpen])
+  }, [workStatus])
+  if (!statusColor) return null
   return (
     <>
-      <b
-        className={`mr-2 ${
-          workStatus.current.isOpen ? 'text-green-600' : 'text-red-600'
-        }`}
-      >
-        {workStatus.current.isOpen ? 'Открыто' : 'Закрыто'}
+      <b className={`mr-2 ${statusColor}`}>
+        {workStatus.isOpen ? 'Открыто' : 'Закрыто'}
       </b>
-      {workStatus.current.isOpen ? 'Закроется' : 'Откроется завтра'} в&nbsp;
-      {workStatus.current.work}
+      {workStatus.isOpen ? 'Закроется' : 'Откроется'} в&nbsp;
+      {workStatus.work}
     </>
   )
 }

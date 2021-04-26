@@ -1,7 +1,8 @@
 import { TimeTableType, TimeTableWorkDay } from 'interfaces'
 
 export default function getWorkStatus(timetable: TimeTableType) {
-  const { today, h, m } = parseDate(new Date())
+  const time = new Date()
+  const { today, h, m } = parseDate(time)
   const nextDay = getNextDay(today)
   const nowOpen = timetable[today - 1]
   const nextOpen = timetable[nextDay - 1]

@@ -3,6 +3,7 @@ import { ServiceDataType } from '@containers/sections/ServicesSection'
 import { GatsbyImageProps } from 'gatsby-plugin-image'
 
 export const contentfulServices = (data: PageDataType) => data
+export const title = (data: PageDataType) => contentfulServices(data).title
 export const image = (data: PageDataType) =>
   contentfulServices(data).logo.gatsbyImageData
 export const timetable = (data: PageDataType) =>
@@ -23,6 +24,8 @@ export const email = (data: PageDataType) =>
   links(data).find(link => link.type === 'email')?.href || ''
 export const phonenumber = (data: PageDataType) =>
   links(data).find(link => link.type === 'phonenumber')?.href || ''
+export const whatsapp = (data: PageDataType) =>
+  links(data).find(link => link.type === 'whatsapp')?.href || ''
 export const mainShortAddres = (data: PageDataType) =>
   contentfulServices(data).mainShortAddres
 export const servicesData = (data: PageDataType): ServiceDataType[] =>
@@ -76,7 +79,7 @@ export type LinkType = {
   text: string
   href: string
   icon: AvailableIcons
-  type: 'phonenumber' | 'email' | 'vk'
+  type: 'phonenumber' | 'email' | 'vk' | 'whatsapp'
 }
 export type TimeTableWorkDay = {
   day: string

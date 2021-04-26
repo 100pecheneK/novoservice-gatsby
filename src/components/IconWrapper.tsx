@@ -20,13 +20,20 @@ export default function IconWrapper({
   className,
 }: {
   children: React.ReactNode
-  color?: 'red' | 'blue' | 'green' | 'yellow' | 'purple'
+  color?: keyof typeof hoverColors
   layoutId?: string
   onClick?: () => void
   className?: string
 }) {
+  const hoverColors = {
+    yellow: 'hover:text-yellow-500',
+    green: 'hover:text-green-500',
+    blue: 'hover:text-blue-500',
+    red: 'hover:text-red-500',
+    purple: 'hover:text-purple-500',
+  }
   const _className = `rounded-full h-14 w-14 flex items-center justify-center cursor-pointer bg-white shadow-lg ${
-    color ? `hover:text-${color}-500` : ''
+    color ? hoverColors[color] : ''
   } ${className || ''}`
 
   return (

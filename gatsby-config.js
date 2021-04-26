@@ -28,6 +28,7 @@ module.exports = {
         accessToken: '3FJndzYIb-8uGdt0mJTY_3rM57A1-U-H1rqM-Tsp7kg',
       },
     },
+    'gatsby-plugin-react-helmet',
     'gatsby-plugin-image',
     'gatsby-transformer-sharp',
     'gatsby-transformer-remark',

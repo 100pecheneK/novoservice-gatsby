@@ -17,22 +17,27 @@ export default function Page({
   const mainData = selectors.mainData(data)
   const email = selectors.email(data)
   const phonenumber = selectors.phonenumber(data)
+  const whatsapp = selectors.whatsapp(data)
   const servicesData = selectors.servicesData(data)
   const servicesContacts = selectors.servicesContacts(data)
   const placeData = selectors.placeData(data)
   const timetable = selectors.timetable(data)
   const contactsData = selectors.contactsData(data)
+<<<<<<< HEAD
   const serviceWelcomeText = selectors.serviceWelcomeText(data)
+=======
+  const title = selectors.title(data)
+>>>>>>> master
 
   return (
     <WorkStatusProvider value={{ timetable }}>
-      <PageLayout>
+      <PageLayout pageName={title}>
         <MainSection mainData={mainData} />
         <ServicesSection
           serviceWelcomeText={serviceWelcomeText}
           servicesContacts={servicesContacts}
           servicesData={servicesData}
-          contacts={{ email, phonenumber }}
+          contacts={{ email, phonenumber, whatsapp }}
         />
         <Element name='timetable'>
           <PlaceSection placeData={placeData} />

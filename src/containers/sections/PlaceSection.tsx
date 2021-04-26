@@ -51,7 +51,10 @@ export default function PlaceSection({
         </div>
         <div>
           <H2 text='Мы работаем для Вас здесь' />
-          <div className='mt-5' dangerouslySetInnerHTML={{ __html: map }} />
+          <div
+            className='mt-5 map'
+            dangerouslySetInnerHTML={{ __html: map }}
+          />
         </div>
       </div>
     </div>

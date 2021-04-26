@@ -3,6 +3,7 @@ import React from 'react'
 import HomePage from '@containers/pages/HomePage'
 import { GatsbyImageProps } from 'gatsby-plugin-image'
 import { GatsbyImage } from 'gatsby-plugin-image'
+import SendButton from '@components/SendButton'
 
 export type SiteInfoType = {
   allContentfulServices: {
