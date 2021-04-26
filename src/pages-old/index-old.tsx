@@ -1,9 +1,7 @@
-import { graphql } from 'gatsby'
-import React from 'react'
 import HomePage from '@containers/pages/HomePage'
+import { graphql } from 'gatsby'
 import { GatsbyImageProps } from 'gatsby-plugin-image'
-import { GatsbyImage } from 'gatsby-plugin-image'
-import SendButton from '@components/SendButton'
+import React from 'react'
 
 export type SiteInfoType = {
   allContentfulServices: {

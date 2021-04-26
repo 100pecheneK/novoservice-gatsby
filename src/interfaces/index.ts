@@ -49,3 +49,30 @@ export type IconProps = {
   onClick?: (e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
   className?: string
 }
+
+export type SiteInfoType = {
+  allContentfulServices: {
+    nodes: {
+      id: string
+      title: string
+      link: string
+      subtitle: string
+      logoAlt: string
+      logo: {
+        gatsbyImageData: GatsbyImageProps['image']
+      }
+    }[]
+  }
+}
+export type SettingsType = {
+  contentfulSettings: {
+    welcomeTitle: string
+  }
+}
+
+export type HomeProps = {
+  data: {
+    siteInfo: SiteInfoType
+    contentfulSettings: SettingsType
+  }
+}

@@ -23,11 +23,8 @@ export default function Page({
   const placeData = selectors.placeData(data)
   const timetable = selectors.timetable(data)
   const contactsData = selectors.contactsData(data)
-<<<<<<< HEAD
   const serviceWelcomeText = selectors.serviceWelcomeText(data)
-=======
   const title = selectors.title(data)
->>>>>>> master
 
   return (
     <WorkStatusProvider value={{ timetable }}>
