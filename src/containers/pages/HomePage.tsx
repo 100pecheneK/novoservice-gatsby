@@ -2,7 +2,8 @@ import H1 from '@components/H1'
 import MotionCard from '@components/MotionCard'
 import { AnimatePresence } from 'framer-motion'
 import { Link } from 'gatsby'
-import { SettingsType, SiteInfoType } from 'pages/index-old'
+import { SettingsType, SiteInfoType } from 'interfaces'
+
 import React from 'react'
 
 export type HomePageProps = {
