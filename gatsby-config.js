@@ -21,6 +21,13 @@ module.exports = {
         path: `${__dirname}/src/data/`,
       },
     },
+    {
+      resolve: `gatsby-source-contentful`,
+      options: {
+        spaceId: `zqgyngj76m4z`,
+        accessToken: '3FJndzYIb-8uGdt0mJTY_3rM57A1-U-H1rqM-Tsp7kg',
+      },
+    },
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-image',
     'gatsby-transformer-sharp',

@@ -12,9 +12,11 @@ export default function MotionCard({
   layoutId: string
   title: string
   subtitle: string
-  logo: { childImageSharp: { gatsbyImageData: GatsbyImageProps['image'] } }
+  logo: { gatsbyImageData: GatsbyImageProps['image'] }
   logoAlt: string
 }) {
+  console.log(layoutId)
+
   return (
     <motion.div
       layoutId={layoutId}
@@ -31,7 +33,7 @@ export default function MotionCard({
           className='flex justify-center items-center lg:flex-shrink-0'
         >
           <GatsbyImage
-            image={logo.childImageSharp.gatsbyImageData}
+            image={logo.gatsbyImageData}
             alt={logoAlt}
             className='rounded-lg lg:max-w-xl'
           />

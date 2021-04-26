@@ -2,36 +2,40 @@ import { graphql } from 'gatsby'
 import React from 'react'
 import HomePage from '@containers/pages/HomePage'
 import { GatsbyImageProps } from 'gatsby-plugin-image'
+import { GatsbyImage } from 'gatsby-plugin-image'
 import SendButton from '@components/SendButton'
 
 export type SiteInfoType = {
-  nodes: {
-    id: string
-    frontmatter: {
+  allContentfulServices: {
+    nodes: {
+      id: string
       title: string
-      _link: string
+      link: string
       subtitle: string
       logoAlt: string
       logo: {
-        childImageSharp: {
-          gatsbyImageData: GatsbyImageProps['image']
-        }
+        gatsbyImageData: GatsbyImageProps['image']
       }
-    }
-  }[]
+    }[]
+  }
 }
 export type SettingsType = {
-  frontmatter: { welcomeTitle: string }
+  contentfulSettings: {
+    welcomeTitle: string
+  }
 }
 
 export type HomeProps = {
-  data: { siteInfo: SiteInfoType; settings: SettingsType }
+  data: {
+    siteInfo: SiteInfoType
+    contentfulSettings: SettingsType
+  }
 }
 
 export default function Home({ data }: HomeProps) {
-  const { siteInfo, settings } = data
+  const { siteInfo, contentfulSettings } = data
 
-  return <HomePage siteInfo={siteInfo} settings={settings} />
+  return <HomePage pageContext={{ siteInfo, settings: contentfulSettings }} />
 }
 
 export const query = graphql`
@@ -55,10 +59,8 @@ export const query = graphql`
         }
       }
     }
-    settings: markdownRemark(frontmatter: { _type: { eq: "Настройки" } }) {
-      frontmatter {
-        welcomeTitle
-      }
+    contentfulSettings {
+      welcomeTitle
     }
   }
 `

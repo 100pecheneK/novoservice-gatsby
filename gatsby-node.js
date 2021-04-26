@@ -13,3 +13,98 @@ exports.onCreateWebpackConfig = ({ actions }) => {
     },
   })
 }
+
+exports.createPages = async ({ graphql, actions }) => {
+  const { data: homePageLinks } = await graphql(`
+    query HomePageLinks {
+      allContentfulServices(sort: { fields: sort }) {
+        nodes {
+          id
+          title
+          link
+          subtitle
+          logoAlt
+          logo {
+            gatsbyImageData(placeholder: BLURRED)
+          }
+        }
+      }
+    }
+  `)
+  const { data: settings } = await graphql(`
+    query Settings {
+      contentfulSettings {
+        welcomeTitle
+      }
+    }
+  `)
+  const { data: servicesDetails } = await graphql(`
+    query AllServices {
+      allContentfulServices {
+        nodes {
+          id
+          link
+          logoAlt
+          mainH1
+          mainH2
+          mainShortAddres
+          logo {
+            gatsbyImageData
+          }
+          links {
+            type
+            text
+            icon
+            href
+          }
+          map {
+            map
+          }
+          services: products {
+            title
+            subtitle
+            subservices
+            imageAlt: imageAltForSeo
+            image {
+              gatsbyImageData
+            }
+            vk
+          }
+          serviceContacts
+          serviceWelcomeText
+          serviceName
+          sort
+          subtitle
+          timetable {
+            timetable {
+              day
+              to {
+                h
+                m
+              }
+              from {
+                h
+                m
+              }
+            }
+          }
+          title
+        }
+      }
+    }
+  `)
+
+  actions.createPage({
+    path: '/',
+    component: path.resolve('./src/containers/pages/HomePage.tsx'),
+    context: { siteInfo: homePageLinks, settings },
+  })
+
+  servicesDetails.allContentfulServices.nodes.forEach(pageData => {
+    actions.createPage({
+      path: pageData.link,
+      component: path.resolve('./src/containers/pages/Page.tsx'),
+      context: pageData,
+    })
+  })
+}

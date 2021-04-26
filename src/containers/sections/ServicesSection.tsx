@@ -10,7 +10,7 @@ export type ServiceDataType = {
   title: string
   subtitle: string
   subservices?: string[]
-  image?: { childImageSharp: { gatsbyImageData: GatsbyImageProps['image'] } }
+  image?: { gatsbyImageData: GatsbyImageProps['image'] }
   imageAlt: string
   vk?: string
 }
@@ -18,10 +18,16 @@ export type ServiceDataType = {
 export default function ServicesSection({
   servicesData,
   contacts,
+  serviceWelcomeText,
   servicesContacts,
 }: {
   servicesData: ServiceDataType[]
+<<<<<<< HEAD
+  contacts: { email: string; phonenumber: string }
+  serviceWelcomeText: string
+=======
   contacts: { email: string; phonenumber: string; whatsapp: string }
+>>>>>>> master
   servicesContacts: ['vk' | 'email' | 'whatsapp']
 }) {
   const [
@@ -123,7 +129,7 @@ export default function ServicesSection({
   return (
     <Element name='services'>
       <h2 className='text-2xl font-bold text-center pt-3'>
-        Выберите устройство
+        {serviceWelcomeText}
       </h2>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
         <AnimateSharedLayout type='crossfade'>
@@ -137,7 +143,7 @@ export default function ServicesSection({
             >
               {item.image && (
                 <GatsbyImage
-                  image={item.image.childImageSharp.gatsbyImageData}
+                  image={item.image.gatsbyImageData}
                   alt={item.imageAlt}
                   className='w-50 h-50 object-cover'
                 />

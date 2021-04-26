@@ -2,7 +2,7 @@ import H1 from '@components/H1'
 import MotionCard from '@components/MotionCard'
 import { AnimatePresence } from 'framer-motion'
 import { Link } from 'gatsby'
-import { SettingsType, SiteInfoType } from 'pages'
+import { SettingsType, SiteInfoType } from 'pages/index-old'
 import React from 'react'
 
 export type HomePageProps = {
@@ -10,19 +10,25 @@ export type HomePageProps = {
   settings: SettingsType
 }
 
-export default function HomePage({ siteInfo, settings }: HomePageProps) {
+export default function HomePage({
+  pageContext: { siteInfo, settings },
+}: {
+  pageContext: HomePageProps
+}) {
   return (
     <div className='container h-screen grid place-items-center'>
       <div className='flex flex-col'>
-        <H1 text={settings.frontmatter.welcomeTitle} />
+        <H1 text={settings.contentfulSettings.welcomeTitle} />
         <div className='xl:flex justify-center'>
-          {siteInfo.nodes.map(({ frontmatter: { _link, ...cardData }, id }) => (
-            <AnimatePresence key={id}>
-              <Link to={_link}>
-                <MotionCard layoutId={_link} {...cardData} />
-              </Link>
-            </AnimatePresence>
-          ))}
+          {siteInfo.allContentfulServices.nodes.map(
+            ({ id, link, ...cardData }) => (
+              <AnimatePresence key={id}>
+                <Link to={link}>
+                  <MotionCard layoutId={link} {...cardData} />
+                </Link>
+              </AnimatePresence>
+            )
+          )}
         </div>
       </div>
     </div>
