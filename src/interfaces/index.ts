@@ -1,3 +1,5 @@
+import { GatsbyImageProps } from "gatsby-plugin-image"
+
 export type ServiceDataType = {
   id: string
   title: string
