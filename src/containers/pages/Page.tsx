@@ -25,7 +25,7 @@ export default function Page({
   const contactsData = selectors.contactsData(data)
   const serviceWelcomeText = selectors.serviceWelcomeText(data)
   const title = selectors.title(data)
-
+  const layoutMakerData = selectors.layoutMakerData(data)
   return (
     <WorkStatusProvider value={{ timetable }}>
       <PageLayout pageName={title}>
@@ -34,6 +34,7 @@ export default function Page({
           serviceWelcomeText={serviceWelcomeText}
           servicesContacts={servicesContacts}
           servicesData={servicesData}
+          layoutMakerData={layoutMakerData}
           contacts={{ email, phonenumber, whatsapp }}
         />
         <Element name='timetable'>

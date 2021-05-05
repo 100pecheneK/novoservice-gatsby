@@ -4,6 +4,8 @@ import { Element } from 'react-scroll'
 import { Close, MailSVG, VkSVG, WhatsappSVG } from '@components/Icons'
 import SendButton from '@components/SendButton'
 import { GatsbyImage, GatsbyImageProps } from 'gatsby-plugin-image'
+import { PageDataType } from 'interfaces'
+import LayoutSelector from '@components/LayoutSelector'
 
 export type ServiceDataType = {
   id: string
@@ -20,11 +22,13 @@ export default function ServicesSection({
   contacts,
   serviceWelcomeText,
   servicesContacts,
+  layoutMakerData,
 }: {
   servicesData: ServiceDataType[]
   serviceWelcomeText: string
   contacts: { email: string; phonenumber: string; whatsapp: string }
   servicesContacts: ['vk' | 'email' | 'whatsapp']
+  layoutMakerData: PageDataType['layouts']
 }) {
   const [
     selectedServiceId,
@@ -77,9 +81,7 @@ export default function ServicesSection({
     const subject = getSubject(selectedService)
     const body = getBody(selectedSubservices)
     const text = `${subject}.%0A${body}`
-    window.open(
-      `${contacts.whatsapp}${text}`
-    )
+    window.open(`${contacts.whatsapp}${text}`)
   }
   function sendToVk() {
     const selectedService = getSelectedService()
@@ -122,11 +124,16 @@ export default function ServicesSection({
   if (!servicesData.length) {
     return null
   }
+
   return (
     <Element name='services'>
       <h2 className='text-2xl font-bold text-center pt-3'>
         {serviceWelcomeText}
       </h2>
+      <LayoutSelector
+        layoutMakerData={layoutMakerData}
+        welcomeText={'Или создайте свой макет'}
+      />
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
         <AnimateSharedLayout type='crossfade'>
           {servicesData.map(item => (
@@ -241,21 +248,23 @@ export default function ServicesSection({
                           }
                         )}
                       </ul>
-                      <div
-                        className={`grid md:grid-cols-${
-                          servicesContacts.length >= 2 ? 2 : 1
-                        } gap-2 md:gap-3`}
-                      >
-                        {servicesContacts.map((type, i) => {
-                          const Send = sendButtons[type]
-                          const className =
-                            servicesContacts.length % 2 !== 0 &&
-                            i + 1 === servicesContacts.length
-                              ? 'col-span-2'
-                              : ''
-                          return <Send key={i} className={className} />
-                        })}
-                      </div>
+                      {servicesContacts && (
+                        <div
+                          className={`grid md:grid-cols-${
+                            servicesContacts.length >= 2 ? 2 : 1
+                          } gap-2 md:gap-3`}
+                        >
+                          {servicesContacts.map((type, i) => {
+                            const Send = sendButtons[type]
+                            const className =
+                              servicesContacts.length % 2 !== 0 &&
+                              i + 1 === servicesContacts.length
+                                ? 'col-span-2'
+                                : ''
+                            return <Send key={i} className={className} />
+                          })}
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 </div>

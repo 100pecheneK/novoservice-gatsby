@@ -1,4 +1,4 @@
-import { GatsbyImageProps } from "gatsby-plugin-image"
+import { GatsbyImageProps } from 'gatsby-plugin-image'
 
 export type ServiceDataType = {
   id: string
@@ -9,23 +9,44 @@ export type ServiceDataType = {
   imageAlt: string
   vk?: string
 }
-export type PageDataType = {
-  _type: string
-  _documentName: string
-  _link: string
-  _sort: number
+export type LayoutType = {
+  id: string
   title: string
-  subtitle: string
-  logo: string
-  servicesContacts: ['vk' | 'email' | 'whatsapp']
-  services: Omit<ServiceDataType, 'id'>[]
+  layout: {
+    file: {
+      url: string
+    }
+    gatsbyImageData: GatsbyImageProps['image']
+  }
+  background: {
+    file: {
+      url: string
+    }
+  }
+  price: number
+}
+export type PageDataType = {
+  link: string
   logoAlt: string
   mainH1: string
   mainH2: string
   mainShortAddres: string
+  logo: {
+    gatsbyImageData: GatsbyImageProps['image']
+  }
   links: LinkType[]
-  timetable: TimeTableType
-  map: string
+  layouts: LayoutType[] | null
+  map: {
+    map: string
+  }
+  services: Omit<ServiceDataType, 'id'>[]
+  serviceWelcomeText: string
+  serviceContacts: ['vk' | 'email' | 'whatsapp']
+  subtitle: string
+  timetable: {
+    timetable: TimeTableType
+  }
+  title: string
 }
 
 export type LinkType = {

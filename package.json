@@ -8,11 +8,13 @@
     "build": "gatsby build",
     "develop": "gatsby develop -o",
     "develop-local": "gatsby develop -o -H 0.0.0.0",
-    "start": "yarn run develop",
+    "start": "yarn run clean & yarn run develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean"
   },
   "dependencies": {
+    "@headlessui/react": "^1.1.1",
+    "@heroicons/react": "^1.0.1",
     "framer-motion": "^4.0.0",
     "gatsby": "^3.0.1",
     "gatsby-plugin-image": "^1.1.1",
@@ -25,11 +27,15 @@
     "gatsby-source-filesystem": "^3.1.0",
     "gatsby-transformer-remark": "^3.1.0",
     "gatsby-transformer-sharp": "^3.1.0",
+    "konva": "^7.2.5",
+    "nanoid": "^3.1.22",
     "postcss": "^8.2.8",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-helmet": "^6.1.0",
-    "react-scroll": "^1.8.2"
+    "react-konva": "^17.0.2-0",
+    "react-scroll": "^1.8.2",
+    "use-image": "^1.0.7"
   },
   "devDependencies": {
     "@tailwindcss/custom-forms": "^0.2.1",
