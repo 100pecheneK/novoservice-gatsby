@@ -27,9 +27,11 @@ export default function LayoutSelector({
   const [selectedLayout, setSelectedLayout] = useState<LayoutType | null>(null)
 
   function closeLayoutMaker() {
+    document.body.style.overflow = 'auto'
     setIsLayoutMakerOpen(false)
   }
   function openLayoutMaker() {
+    document.body.style.overflow = 'hidden'
     setIsLayoutMakerOpen(true)
   }
   return (
@@ -44,7 +46,7 @@ export default function LayoutSelector({
       </motion.h3>
       <AnimatePresence>
         {isLayoutMakerOpen && (
-          <div className='fixed z-10 inset-0'>
+          <div className='fixed z-10 inset-0 overflow-y-auto'>
             <div className='flex justify-center servicesData-center min-h-screen pt-4 px-4 pb-20 text-center'>
               <motion.div
                 initial={{ opacity: 0 }}

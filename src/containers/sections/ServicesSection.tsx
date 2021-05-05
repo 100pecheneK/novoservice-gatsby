@@ -39,8 +39,13 @@ export default function ServicesSection({
   >([])
 
   function selectService(service: ServiceDataType) {
+    document.body.style.overflow = 'hidden'
     setSelectedSubserviceIdxs([])
     setSelectedServiceId(service)
+  }
+  function deselectService() {
+    document.body.style.overflow = 'auto'
+    setSelectedServiceId(null)
   }
 
   function getSelectedService() {
@@ -175,7 +180,7 @@ export default function ServicesSection({
                     exit={{ opacity: 0 }}
                     className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity'
                     aria-hidden='true'
-                    onClick={() => setSelectedServiceId(null)}
+                    onClick={deselectService}
                   />
                   {/* Modal content */}
                   <motion.div
@@ -183,7 +188,7 @@ export default function ServicesSection({
                     className='container inline-block align-bottom bg-white rounded-lg text-left shadow-xl transform sm:my-8 sm:align-middle sm:max-w-lg sm:w-full h-full py-5 px-5'
                   >
                     <div>
-                      <Close onClick={() => setSelectedServiceId(null)} />
+                      <Close onClick={deselectService} />
                       <motion.h4
                         className='text-2xl text-gray-900 text-center'
                         layoutId={`service-title-${selectedServiceId.id}`}
