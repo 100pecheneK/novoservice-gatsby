@@ -33,7 +33,6 @@ export default function MainSection({
   mainData: MainSectionDataType
 }) {
   const [isHumburgerOpen, setIsHumburgerOpen] = useState(false)
-  console.log(link)
 
   return (
     <motion.main layoutId={link} className='flex flex-col h-full lg:h-screen'>

@@ -89,6 +89,22 @@ exports.createPages = async ({ graphql, actions }) => {
             }
           }
           title
+          layouts {
+            id
+            title
+            layout {
+              gatsbyImageData
+              file {
+                url
+              }
+            }
+            background {
+              file {
+                url
+              }
+            }
+            price
+          }
         }
       }
     }

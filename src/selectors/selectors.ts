@@ -1,6 +1,7 @@
 import { AvailableIcons } from '@components/Icons'
 import { ServiceDataType } from '@containers/sections/ServicesSection'
 import { GatsbyImageProps } from 'gatsby-plugin-image'
+import { PageDataType } from 'interfaces'
 
 export const contentfulServices = (data: PageDataType) => data
 export const title = (data: PageDataType) => contentfulServices(data).title
@@ -10,6 +11,8 @@ export const timetable = (data: PageDataType) =>
   contentfulServices(data).timetable.timetable
 export const serviceWelcomeText = (data: PageDataType) =>
   contentfulServices(data).serviceWelcomeText
+export const layoutMakerData = (data: PageDataType) =>
+  contentfulServices(data).layouts
 export const link = (data: PageDataType) => contentfulServices(data).link
 export const logoAlt = (data: PageDataType) => contentfulServices(data).logoAlt
 export const links = (data: PageDataType) => contentfulServices(data).links
@@ -51,29 +54,6 @@ export const mainData = (data: PageDataType) => ({
   mainH2: mainH2(data),
   mainShortAddres: mainShortAddres(data),
 })
-
-export type PageDataType = {
-  link: string
-  logoAlt: string
-  mainH1: string
-  mainH2: string
-  mainShortAddres: string
-  logo: {
-    gatsbyImageData: GatsbyImageProps['image']
-  }
-  links: LinkType[]
-  map: {
-    map: string
-  }
-  services: Omit<ServiceDataType, 'id'>[]
-  serviceWelcomeText: string
-  serviceContacts: ['vk' | 'email' | 'whatsapp']
-  subtitle: string
-  timetable: {
-    timetable: TimeTableType
-  }
-  title: string
-}
 
 export type LinkType = {
   text: string
