@@ -9,6 +9,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Helmet>
         <meta charSet='utf-8' />
         <title>Сервисы Новоуральск</title>
+        <meta
+          name='google-site-verification'
+          content='DbG-0d2fCX-0i-V3UumkrTUkLkWnFFHmdyPXVNiAwyY'
+        />
       </Helmet>
       <AnimateSharedLayout type='crossfade'>{children}</AnimateSharedLayout>
     </>
