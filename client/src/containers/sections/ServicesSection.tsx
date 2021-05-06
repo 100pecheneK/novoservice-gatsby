@@ -5,7 +5,9 @@ import { Close, MailSVG, VkSVG, WhatsappSVG } from '@components/Icons'
 import SendButton from '@components/SendButton'
 import { GatsbyImage, GatsbyImageProps } from 'gatsby-plugin-image'
 import { PageDataType } from 'interfaces'
-import LayoutSelector from '@components/LayoutSelector'
+// import LayoutSelector from '@components/LayoutSelector'
+// @ts-ignore
+import loadable from '@loadable/component'
 
 export type ServiceDataType = {
   id: string
@@ -39,8 +41,13 @@ export default function ServicesSection({
   >([])
 
   function selectService(service: ServiceDataType) {
+    document.body.style.overflow = 'hidden'
     setSelectedSubserviceIdxs([])
     setSelectedServiceId(service)
+  }
+  function deselectService() {
+    document.body.style.overflow = 'auto'
+    setSelectedServiceId(null)
   }
 
   function getSelectedService() {
@@ -125,15 +132,23 @@ export default function ServicesSection({
     return null
   }
 
+  function renderLayoutSelector() {
+    if (!layoutMakerData) return null
+    const LayoutSelector = loadable(() => import('@components/LayoutSelector'))
+    return (
+      <LayoutSelector
+        layoutMakerData={layoutMakerData}
+        welcomeText={'Или создайте свой макет'}
+      />
+    )
+  }
+
   return (
     <Element name='services'>
       <h2 className='text-2xl font-bold text-center pt-3'>
         {serviceWelcomeText}
       </h2>
-      <LayoutSelector
-        layoutMakerData={layoutMakerData}
-        welcomeText={'Или создайте свой макет'}
-      />
+      {renderLayoutSelector()}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
         <AnimateSharedLayout type='crossfade'>
           {servicesData.map(item => (
@@ -175,7 +190,7 @@ export default function ServicesSection({
                     exit={{ opacity: 0 }}
                     className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity'
                     aria-hidden='true'
-                    onClick={() => setSelectedServiceId(null)}
+                    onClick={deselectService}
                   />
                   {/* Modal content */}
                   <motion.div
@@ -183,7 +198,7 @@ export default function ServicesSection({
                     className='container inline-block align-bottom bg-white rounded-lg text-left shadow-xl transform sm:my-8 sm:align-middle sm:max-w-lg sm:w-full h-full py-5 px-5'
                   >
                     <div>
-                      <Close onClick={() => setSelectedServiceId(null)} />
+                      <Close onClick={deselectService} />
                       <motion.h4
                         className='text-2xl text-gray-900 text-center'
                         layoutId={`service-title-${selectedServiceId.id}`}

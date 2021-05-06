@@ -1,8 +1,8 @@
+import Konva from 'konva'
 import React from 'react'
 import { Image, Transformer } from 'react-konva'
 
-function getSize(size,stageHeight,
-stageWidth) {
+function getSize(size, stageHeight, stageWidth) {
   if (size.height === size.width) {
     const widthDiff = size.width - stageWidth
     const heightDiff = size.height - stageHeight
@@ -79,6 +79,7 @@ export default function ResizableImage({
         id={file.id}
         x={file.x}
         y={file.y}
+        opacity={0.9}
         image={file.img}
         onClick={onSelect}
         onTap={onSelect}
