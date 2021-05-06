@@ -7,7 +7,8 @@ import React from 'react'
 import { Element } from 'react-scroll'
 import { WorkStatusProvider } from '@contexts/WorkStatusContext'
 import ContactsSection from '@containers/sections/ContactsSection'
-import { PageDataType } from 'selectors/selectors'
+import { PageDataType } from 'interfaces'
+
 
 export default function Page({
   pageContext: data,

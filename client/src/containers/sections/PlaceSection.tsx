@@ -1,7 +1,7 @@
 import H2 from '@components/H2'
 import { useWorkStatus } from '@contexts/WorkStatusContext'
 import { TimeTableType } from 'interfaces'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 type PlaceDataType = {
   map: string
@@ -13,10 +13,13 @@ export default function PlaceSection({
 }: {
   placeData: PlaceDataType
 }) {
+  const mapRef = useRef(null)
+  const onScreen = useOnScreenOnce(mapRef)
+
   const { isOpen, today } = useWorkStatus()
-const [statusColor, setStatusColor] = useState('')
+  const [statusColor, setStatusColor] = useState('')
   useEffect(() => {
-    if(typeof isOpen !== 'undefined' ){
+    if (typeof isOpen !== 'undefined') {
       setStatusColor(['text-red-600', 'text-green-600'][+isOpen])
     }
   }, [isOpen])
@@ -54,11 +57,44 @@ const [statusColor, setStatusColor] = useState('')
             </div>
           </div>
         </div>
-        <div>
+        <div ref={mapRef}>
           <H2 text='Мы работаем для Вас здесь' />
-          <div className='mt-5 map' dangerouslySetInnerHTML={{ __html: map }} />
+          {onScreen && (
+            <div
+              className='mt-5 map'
+              dangerouslySetInnerHTML={{ __html: map }}
+            />
+          )}
         </div>
       </div>
     </div>
   )
+}
+const useOnScreenOnce = (ref: any, rootMargin = '0px') => {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.unobserve(currentElement)
+        }
+      },
+      {
+        rootMargin,
+      }
+    )
+
+    const currentElement = ref?.current
+
+    if (currentElement) {
+      observer.observe(currentElement)
+    }
+
+    return () => {
+      observer.unobserve(currentElement)
+    }
+  }, [])
+  return isVisible
 }
