@@ -2,9 +2,7 @@
   max-width: 100vw;
   margin: auto;
 }
-.inputs :first-child {
-  grid-column: span 2 / span 2 !important;
-}
+
 .input {
   padding: 0.5em 0;
   display: grid;

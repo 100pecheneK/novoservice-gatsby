@@ -186,7 +186,7 @@ export default function LayoutSelector({
                         selectedLayoutId: selectedLayout.id,
                       }
                       const body = JSON.stringify(toBuy)
-                      console.log(body)
+                      // console.log(body)
                     }}
                     backgroundImage={selectedLayout.background.file.url}
                     layoutImage={selectedLayout.layout.file.url}

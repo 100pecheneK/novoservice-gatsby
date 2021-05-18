@@ -5,6 +5,7 @@ import './LayoutMaker.css'
 import BackgroundImage from './BackgroundImage'
 import LayoutImage from './LayoutImage'
 import ResizableImage from './ResizableImage'
+import ResizableText from './ResizableText'
 
 const settings = {
   initialResizeImage: {
@@ -13,11 +14,6 @@ const settings = {
   },
 }
 
-// type LayoutMakerProps = {
-//   onExport: () => void
-//   backgroundImage: string
-//   layoutImage: string
-// }: LayoutMakerProps
 export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
   const [stageWidth, setStageWidth] = useState(0)
   const [stageHeight, setStageHeight] = useState(0)
@@ -28,6 +24,8 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
   const stageRef = useRef(null)
   const stageContainerRef = useRef(null)
   const [maxStageWidth, setMaxStageWidth] = useState(0)
+  const [textValue, setTextValue] = useState('')
+
   useEffect(() => {
     if (!stageContainerRef.current) return
     const stageContainerStyle = window.getComputedStyle(
@@ -41,7 +39,57 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
       )
     )
   }, [stageContainerRef])
-
+  function updateOrderInputs() {
+    setOrderInputs(prev => [...prev, nanoid()])
+  }
+  function onAddText(orderNumber) {
+    if (!textValue) return
+    setFiles(prev => [
+      ...prev,
+      {
+        orderNumber,
+        x: settings.initialResizeImage.x,
+        y: settings.initialResizeImage.y,
+        id: nanoid(),
+        height: 50,
+        width: 100,
+        value: textValue,
+        type: 'text',
+        fontSize: 15,
+        color: '#000000',
+      },
+    ])
+    setTextValue('')
+    updateOrderInputs()
+  }
+  function changeFontSizeByOrderNumber(e, orderNumber) {
+    console.log(e.target.value)
+    setFiles(prevFiles =>
+      prevFiles.map(prevFile => {
+        if (prevFile.orderNumber === orderNumber) {
+          return {
+            ...prevFile,
+            fontSize: +e.target.value,
+          }
+        }
+        return prevFile
+      })
+    )
+  }
+  function changeColorByOrderNumber(e, orderNumber) {
+    console.log(e.target.value)
+    setFiles(prevFiles =>
+      prevFiles.map(prevFile => {
+        if (prevFile.orderNumber === orderNumber) {
+          return {
+            ...prevFile,
+            color: e.target.value,
+          }
+        }
+        return prevFile
+      })
+    )
+  }
   function checkDeselect(e) {
     if (e.target?.attrs?.name === 'bg') {
       selectShape(null)
@@ -109,10 +157,11 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
             id: nanoid(),
             name: file.name,
             file: reader.result,
+            type: 'image',
           },
         ])
       }
-      setOrderInputs(prev => [...prev, nanoid()])
+      updateOrderInputs()
     }
     reader.readAsDataURL(file)
   }
@@ -126,6 +175,7 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
     setIsExporting(true)
   }
   function exportStageToPng() {
+    stageRef.current.children.shift()
     const exported = [
       {
         type: 'layout',
@@ -158,42 +208,112 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
       >
         Купить
       </button>
-      <div className='grid grid-cols-2 gap-1 inputs'>
+      <div className='grid gap-1'>
         {orderInputs
           .slice(0)
           .reverse()
           .map(orderNumber => {
             const currentFile = files.find(f => f.orderNumber === orderNumber)
+            if (currentFile) {
+              if (currentFile.type === 'image') {
+                return (
+                  <div key={orderNumber} className='grid gap-1 py-2 px-0'>
+                    <input
+                      accept='image/*'
+                      type='file'
+                      id={`input-file-${orderNumber}`}
+                      onChange={e => onInputChange(e, orderNumber)}
+                      style={{ display: 'none' }}
+                    />
+                    <label
+                      htmlFor={`input-file-${orderNumber}`}
+                      className='cursor-pointer relative w-full bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left grid gap-1'
+                    >
+                      {currentFile.name}
+
+                      <img
+                        className='input-file-preview w-full h-auto'
+                        src={currentFile.img.src}
+                        alt={currentFile.name}
+                      />
+
+                      <button
+                        className='text-white w-full self-end max-h-9 py-1 px-2 bg-red-500 rounded border border-red-600 focus:outline-none focus:ring-1 hover:bg-red-600'
+                        onClick={() => deleteFileByOrderNumber(orderNumber)}
+                      >
+                        Удалить
+                      </button>
+                    </label>
+                  </div>
+                )
+              }
+              if (currentFile.type === 'text') {
+                return (
+                  <div key={orderNumber} className='grid gap-1 py-2 px-0'>
+                    <label
+                      htmlFor={`input-file-${orderNumber}`}
+                      className='cursor-pointer relative w-full bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left grid gap-1'
+                    >
+                      {currentFile.value}
+                      <input
+                        type='text'
+                        value={currentFile.fontSize}
+                        onChange={e =>
+                          changeFontSizeByOrderNumber(e, orderNumber)
+                        }
+                        className={
+                          'relative bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left'
+                        }
+                      />
+                      <input
+                        type='color'
+                        value={currentFile.color}
+                        onChange={e => changeColorByOrderNumber(e, orderNumber)}
+                      />
+                      <button
+                        className='text-white w-full self-end max-h-9 py-1 px-2 bg-red-500 rounded border border-red-600 focus:outline-none focus:ring-1 hover:bg-red-600'
+                        onClick={() => deleteFileByOrderNumber(orderNumber)}
+                      >
+                        Удалить
+                      </button>
+                    </label>
+                  </div>
+                )
+              }
+            }
             return (
               <div key={orderNumber} className='grid gap-1 py-2 px-0'>
-                <input
-                  accept='image/*'
-                  type='file'
-                  id={`input-file-${orderNumber}`}
-                  onChange={e => onInputChange(e, orderNumber)}
-                  style={{ display: 'none' }}
-                />
-                <label
-                  htmlFor={`input-file-${orderNumber}`}
-                  className='cursor-pointer relative w-full bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left grid gap-1'
-                >
-                  {!currentFile?.name && 'Выберите файл'}
-                  {currentFile && (
-                    <img
-                      className='input-file-preview w-full h-auto'
-                      src={currentFile.img.src}
-                      alt={currentFile.name}
-                    />
-                  )}
-                  {currentFile && (
-                    <button
-                      className='text-white w-full self-end max-h-9 py-1 px-2 bg-red-500 rounded border border-red-600 focus:outline-none focus:ring-1 hover:bg-red-600'
-                      onClick={() => deleteFileByOrderNumber(orderNumber)}
-                    >
-                      Удалить
-                    </button>
-                  )}
-                </label>
+                <div className='grid grid-cols-2 gap-1'>
+                  <button
+                    onClick={e => onAddText(orderNumber)}
+                    className='cursor-pointer relative bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left'
+                  >
+                    Добавить текст
+                  </button>
+                  <input
+                    type='text'
+                    id={`input-text-${orderNumber}`}
+                    onChange={e => setTextValue(e.target.value)}
+                    value={textValue}
+                    placeholder='Введите текст'
+                    className='relative bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left'
+                  />
+                </div>
+                <div>
+                  <input
+                    accept='image/*'
+                    type='file'
+                    id={`input-file-${orderNumber}`}
+                    onChange={e => onInputChange(e, orderNumber)}
+                    style={{ display: 'none' }}
+                  />
+                  <label
+                    htmlFor={`input-file-${orderNumber}`}
+                    className='cursor-pointer relative w-full bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left grid gap-1'
+                  >
+                    Выберите файл
+                  </label>
+                </div>
               </div>
             )
           })}
@@ -225,29 +345,53 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
               maxWidth={maxStageWidth}
             />
             {files.map((file, i) => {
-              return (
-                <ResizableImage
-                  stageHeight={stageHeight}
-                  stageWidth={stageWidth}
-                  key={file.id}
-                  file={file}
-                  isSelected={file.id === selectedId}
-                  onSelect={e => {
-                    moveForward(e)
-                    selectShape(file.id)
-                  }}
-                  onChange={newAttrs => {
-                    setFiles(prevFiles => {
-                      return prevFiles.map(f => {
-                        if (f.id === newAttrs.id) {
-                          return { ...f, ...newAttrs }
-                        }
-                        return f
+              console.log('{files.map -> file', file)
+              if (file.type === 'text')
+                return (
+                  <ResizableText
+                    text={file}
+                    key={file.id}
+                    onSelect={e => {
+                      moveForward(e)
+                      selectShape(file.id)
+                    }}
+                    onChange={newAttrs => {
+                      setFiles(prevFiles => {
+                        return prevFiles.map(f => {
+                          if (f.id === newAttrs.id) {
+                            return { ...f, ...newAttrs }
+                          }
+                          return f
+                        })
                       })
-                    })
-                  }}
-                />
-              )
+                    }}
+                    isSelected={file.id === selectedId}
+                  />
+                )
+              if (file.type === 'image')
+                return (
+                  <ResizableImage
+                    stageHeight={stageHeight}
+                    stageWidth={stageWidth}
+                    key={file.id}
+                    file={file}
+                    isSelected={file.id === selectedId}
+                    onSelect={e => {
+                      moveForward(e)
+                      selectShape(file.id)
+                    }}
+                    onChange={newAttrs => {
+                      setFiles(prevFiles => {
+                        return prevFiles.map(f => {
+                          if (f.id === newAttrs.id) {
+                            return { ...f, ...newAttrs }
+                          }
+                          return f
+                        })
+                      })
+                    }}
+                  />
+                )
             })}
           </Layer>
         </Stage>
