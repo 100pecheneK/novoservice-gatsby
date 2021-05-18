@@ -1,8 +1,10 @@
 const path = require('path')
 const LoadablePlugin = require('@loadable/webpack-plugin')
-
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+//   .BundleAnalyzerPlugin
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
+    // plugins: [new LoadablePlugin(), new BundleAnalyzerPlugin()],
     plugins: [new LoadablePlugin()],
     resolve: {
       alias: {
