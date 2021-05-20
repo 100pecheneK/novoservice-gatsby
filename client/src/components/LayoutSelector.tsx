@@ -6,14 +6,14 @@ import LayoutMaker from '@components/LayoutMaker'
 import { CheckIcon, SelectorIcon } from '@components/Icons'
 import { GatsbyImage } from 'gatsby-plugin-image'
 import { Listbox, Transition } from '@headlessui/react'
+import downloadURI from '@utils/downloadURI'
+import classNames from '@utils/classNames'
 
 type LayoutSelectorProps = {
   layoutMakerData: PageDataType['layouts']
   welcomeText: string
 }
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(' ')
-}
+
 export default function LayoutSelector({
   layoutMakerData,
   welcomeText,
@@ -32,7 +32,24 @@ export default function LayoutSelector({
     document.body.style.overflow = 'hidden'
     setIsLayoutMakerOpen(true)
   }
+  function onExport(
+    e: {
+      file: string
+      name: string
+      type: 'layout' | 'asset'
+    }[]
+  ) {
+    if (!selectedLayout) return
 
+    downloadURI(e[0].file, e[0].name)
+    const toBuy = {
+      e,
+      selectedLayoutId: selectedLayout.id,
+    }
+    const body = JSON.stringify(toBuy)
+    setSelectedLayout(null)
+    // console.log(body)
+  }
   return (
     <AnimateSharedLayout type='crossfade'>
       <motion.h3
@@ -164,30 +181,13 @@ export default function LayoutSelector({
                 </div>
                 {selectedLayout && (
                   <LayoutMaker
-                    onExport={(
-                      e: {
-                        file: string
-                        name: string
-                        type: 'layout' | 'asset'
-                      }[]
-                    ) => {
-                      function downloadURI(uri: string, name: string) {
-                        var link = document.createElement('a')
-                        link.download = name
-                        link.href = uri
-                        document.body.appendChild(link)
-                        link.click()
-                        document.body.removeChild(link)
-                      }
-
-                      downloadURI(e[0].file, e[0].name)
-                      const toBuy = {
-                        e,
-                        selectedLayoutId: selectedLayout.id,
-                      }
-                      const body = JSON.stringify(toBuy)
-                      // console.log(body)
+                    clip={{
+                      clipX: selectedLayout.clipX,
+                      clipY: selectedLayout.clipY,
+                      clipHeight: selectedLayout.clipHeight,
+                      clipWidth: selectedLayout.clipWidth,
                     }}
+                    onExport={onExport}
                     backgroundImage={selectedLayout.background.file.url}
                     layoutImage={selectedLayout.layout.file.url}
                   />

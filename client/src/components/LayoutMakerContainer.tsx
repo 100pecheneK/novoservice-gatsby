@@ -1,7 +1,6 @@
 import { Close } from '@components/Icons'
 import LayoutMaker from '@components/LayoutMaker'
 import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { motion } from 'framer-motion'
 import { GatsbyImage } from 'gatsby-plugin-image'
 import { LayoutType } from 'interfaces'

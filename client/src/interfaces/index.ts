@@ -23,6 +23,10 @@ export type LayoutType = {
       url: string
     }
   }
+  clipX: number
+  clipY: number
+  clipHeight: number
+  clipWidth: number
   price: number
 }
 export type PageDataType = {

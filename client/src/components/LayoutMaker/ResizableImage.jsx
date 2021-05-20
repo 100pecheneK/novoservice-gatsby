@@ -73,8 +73,6 @@ export default function ResizableImage({
   return (
     <>
       <Image
-        // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
-        globalCompositeOperation='source-atop'
         // {...file}
         id={file.id}
         x={file.x}

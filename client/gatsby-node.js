@@ -108,6 +108,10 @@ exports.createPages = async ({ graphql, actions }) => {
                 url
               }
             }
+            clipHeight
+            clipWidth
+            clipX
+            clipY
             price
           }
         }
