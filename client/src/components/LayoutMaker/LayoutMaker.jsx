@@ -175,21 +175,32 @@ export default function LayoutMaker({
   }
   function exportStageToPng() {
     stageRef.current.children.shift()
+    console.log(stageRef.current)
     const exported = [
       {
-        type: 'layout',
+        data: {
+          type: 'layout',
+          name: 'layout.png',
+          width: stageRef.current.attrs.width,
+          height: stageRef.current.attrs.height,
+        },
         file: stageRef.current.toDataURL(),
-        name: 'layout.png',
       },
-      ...files.map((file, i) => ({
-        type: 'asset',
-        file: file.file,
-        name: `${i}-${file.name}`,
-        width: file.width,
-        height: file.height,
-        x: file.x,
-        y: file.y,
-      })),
+      ...files
+        .filter(f => f.type !== 'text')
+        .map((file, i) => {
+          return {
+            data: {
+              type: 'asset',
+              name: `${i}-${file.name}`,
+              width: file.width,
+              height: file.height,
+              x: file.x,
+              y: file.y,
+            },
+            file: file.file,
+          }
+        }),
     ]
     onExport(exported)
   }

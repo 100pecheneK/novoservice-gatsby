@@ -35,20 +35,28 @@ export default function LayoutSelector({
   function onExport(
     e: {
       file: string
-      name: string
-      type: 'layout' | 'asset'
+      data: {
+        name: string
+        type: 'layout' | 'asset'
+        width: number
+        height: number
+        x: number
+        y: number
+      }
     }[]
   ) {
     if (!selectedLayout) return
 
-    downloadURI(e[0].file, e[0].name)
+    downloadURI(e[0].file, e[0].data.name)
     const toBuy = {
-      e,
-      selectedLayoutId: selectedLayout.id,
+      data: e.map(file => ({ ...file.data })),
+      id: selectedLayout.id,
     }
-    const body = JSON.stringify(toBuy)
+
+    const body = JSON.stringify(toBuy, null, 4)
+    document.body.innerText = body
+
     setSelectedLayout(null)
-    // console.log(body)
   }
   return (
     <AnimateSharedLayout type='crossfade'>
