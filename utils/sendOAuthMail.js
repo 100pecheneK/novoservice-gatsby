@@ -31,10 +31,11 @@ oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
  *    subject: string
  *    text: string
  *    html: string
+ *    attachnemts: object
  *  }} mailOptions
  * @returns
  */
-async function sendOAuthMail(user, mailOptions) {
+async function sendOAuthMail(user, { options }) {
   try {
     const accessToken = await oAuth2Client.getAccessToken()
     const transport = nodemailer.createTransport({
@@ -48,8 +49,8 @@ async function sendOAuthMail(user, mailOptions) {
         accessToken,
       },
     })
-
-    const result = await transport.sendMail(mailOptions)
+    const result = await transport.sendMail(options)
+    transport.close()
     return result
   } catch (error) {
     return error
