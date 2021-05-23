@@ -28,15 +28,23 @@ app.post('/sendMail', async (req, res) => {
 
 function getQiwiRedirectURL({ successUrl, amount, clientEmail }) {
   const publickKey = process.env.QIWI_PUBLIC
-  const successUrlProcessed = successUrl.replace(/\//g, '%2F')
-  const url = `https://oplata.qiwi.com/create?publicKey=${publickKey}&amount=${amount}&successUrl=${successUrlProcessed}&email=${clientEmail}&customFields[paySourcesFilter]=qw,card`
-  return url
+  const url = `https://oplata.qiwi.com/create?publicKey=${publickKey}&amount=${amount}&successUrl=${successUrl}&email=${clientEmail}&customFields[paySourcesFilter]=qw,card&lifetime=`
+  return encodeURI(url)
 }
+
+app.get('/money', async (req, res) => {
+  const qiwiRedirectURL = getQiwiRedirectURL({
+    successUrl: 'http://localhost',
+    amount: 1,
+    clientEmail: 'mistermihail23@gmail.com',
+  })
+  return res.json({ url: qiwiRedirectURL })
+})
 
 app.post('/money', async (req, res) => {
   const recipient = 'mistermihail23@gmail.com'
-  const subject = 'Subject'
-  const html = '<h1>Text</h1>'
+  const subject = 'Оплата'
+  const html = `<pre>${JSON.stringify(req.body, null, 4)}</pre>`
   const result = await sendMail(recipient, subject, html)
   return res.json(result)
 })
@@ -45,7 +53,6 @@ app.post('/order', upload.array('images'), async (req, res) => {
   try {
     const { email, phone, id, data: jsonData } = req.body
     const data = JSON.parse(jsonData)
-    // ! images only one
     const files = []
     for (let i = 0; i < req.files.length; i++) {
       const file = req.files[i]
@@ -62,7 +69,6 @@ app.post('/order', upload.array('images'), async (req, res) => {
       filename,
       path,
     }))
-    // ! HTML not working
     const result = await sendMail(email, 'Order', html, attachments)
     attachments.forEach(({ path }) =>
       fs.unlink(path, err => {
