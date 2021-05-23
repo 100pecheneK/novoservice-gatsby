@@ -1,6 +1,6 @@
 import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion'
 import { LayoutType, PageDataType } from 'interfaces'
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment, useEffect } from 'react'
 import { Close } from '@components/Icons'
 import LayoutMaker from '@components/LayoutMaker'
 import { CheckIcon, SelectorIcon } from '@components/Icons'
@@ -14,6 +14,19 @@ type LayoutSelectorProps = {
   welcomeText: string
 }
 
+type OrderType = {
+  data: {
+    name: string
+    type: 'layout' | 'asset'
+    width: number
+    height: number
+    x: number
+    y: number
+  }[]
+  images: any[]
+  id: string
+}
+
 export default function LayoutSelector({
   layoutMakerData,
   welcomeText,
@@ -23,6 +36,16 @@ export default function LayoutSelector({
   }
   const [isLayoutMakerOpen, setIsLayoutMakerOpen] = useState(false)
   const [selectedLayout, setSelectedLayout] = useState<LayoutType | null>(null)
+  const [order, setOrder] = useState<OrderType>()
+  const [formVisible, setFormVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [form, setForm] = useState({
+    email: '',
+    phone: '',
+  })
+  function onFormChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setForm(prevForm => ({ ...prevForm, [e.target.name]: e.target.value }))
+  }
 
   function closeLayoutMaker() {
     document.body.style.overflow = 'auto'
@@ -32,9 +55,15 @@ export default function LayoutSelector({
     document.body.style.overflow = 'hidden'
     setIsLayoutMakerOpen(true)
   }
+  function openForm() {
+    setFormVisible(true)
+  }
+  function closeForm() {
+    setFormVisible(false)
+  }
   function onExport(
     e: {
-      file: string
+      file: any
       data: {
         name: string
         type: 'layout' | 'asset'
@@ -47,16 +76,47 @@ export default function LayoutSelector({
   ) {
     if (!selectedLayout) return
 
-    downloadURI(e[0].file, e[0].data.name)
-    const toBuy = {
-      data: e.map(file => ({ ...file.data })),
-      id: selectedLayout.id,
-    }
+    // downloadURI(e[0].file, e[0].data.name)
 
-    const body = JSON.stringify(toBuy, null, 4)
-    document.body.innerText = body
-
+    const data = e.map(file => ({ ...file.data }))
+    const images = e.map(file => file.file)
+    setOrder({ data, images, id: selectedLayout.id })
     setSelectedLayout(null)
+    openForm()
+  }
+
+  function sendOrder(e: React.FormEvent) {
+    e.preventDefault()
+    async function send() {
+      if (!order) return
+      const imagesCount = order.images.length ?? 0
+      const formData = new FormData()
+      for (let i = 0; i < imagesCount; i++) {
+        const img = order.images[i]
+        const name = order.data[i].name
+        const blob = await (await fetch(img)).blob()
+        const file = new File([blob], name)
+        formData.append('images', file)
+      }
+      const API_URL = 'http://localhost:5000/order'
+
+      formData.append('data', JSON.stringify(order.data))
+      formData.append('id', order.id)
+      formData.append('email', form.email)
+      formData.append('phone', form.phone)
+      try {
+        setLoading(true)
+        const redirectUrl = await (
+          await fetch(API_URL, { method: 'POST', body: formData })
+        ).json()
+        console.log(redirectUrl)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        setLoading(false)
+      }
+    }
+    send()
   }
   return (
     <AnimateSharedLayout type='crossfade'>
@@ -85,107 +145,165 @@ export default function LayoutSelector({
                 className='container inline-block align-bottom bg-white rounded-lg text-left shadow-xl transform sm:my-8 sm:align-middle sm:max-w-lg sm:w-full h-full py-5 px-5'
               >
                 <div>
-                  <Close onClick={closeLayoutMaker} />
+                  <div className='flex justify-between'>
+                    <Close onClick={closeLayoutMaker} />
+                    {formVisible && (
+                      <button
+                        className='underline focus:outline-none hover:text-gray-400'
+                        onClick={closeForm}
+                      >
+                        Назад
+                      </button>
+                    )}
+                  </div>
                   <motion.h4 className='text-2xl text-gray-900 text-center'>
-                    Выберите макет
+                    {formVisible
+                      ? 'Заполните данные, чтобы после оплаты Вам пришел чек и мы могли с Вами связаться'
+                      : 'Выберите макет'}
                   </motion.h4>
-                  <Listbox value={selectedLayout} onChange={setSelectedLayout}>
-                    {({ open }) => (
-                      <>
-                        <div className='mt-1 relative'>
-                          <Listbox.Button className='relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500'>
-                            <span className='flex items-center'>
-                              {selectedLayout ? (
-                                <>
-                                  <span className='ml-3 block truncate'>
-                                    {selectedLayout.title} -{' '}
-                                    {selectedLayout.price}₽
+                  {formVisible && (
+                    <form onSubmit={sendOrder} className='grid gap-3 mt-3'>
+                      <label className='relative w-full bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left grid gap-1'>
+                        Почта
+                        <input
+                          type='email'
+                          name='email'
+                          required
+                          value={form['email']}
+                          onChange={onFormChange}
+                          className={
+                            'relative bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left'
+                          }
+                        />
+                        Номер телефона
+                        <input
+                          type='tel'
+                          name='phone'
+                          required
+                          value={form['phone']}
+                          onChange={onFormChange}
+                          className={
+                            'relative bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left'
+                          }
+                        />
+                      </label>
+                      <button
+                        className={`text-white w-full self-end max-h-9 py-1 px-2 bg-green-500 rounded border border-green-600 focus:outline-none focus:ring-1 hover:bg-green-600 ${
+                          loading
+                            ? 'disabled:opacity-50 cursor-not-allowed'
+                            : ''
+                        }`}
+                        onClick={() => ({})}
+                        disabled={loading}
+                      >
+                        {loading ? 'Обработка...' : 'Купить'}
+                      </button>
+                    </form>
+                  )}
+                  {!formVisible && (
+                    <Listbox
+                      value={selectedLayout}
+                      onChange={setSelectedLayout}
+                    >
+                      {({ open }) => (
+                        <>
+                          <div className='mt-1 relative'>
+                            <Listbox.Button className='relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500'>
+                              <span className='flex items-center'>
+                                {selectedLayout ? (
+                                  <>
+                                    <span className='ml-3 block truncate'>
+                                      {selectedLayout.title} -{' '}
+                                      {selectedLayout.price}₽
+                                    </span>
+                                  </>
+                                ) : (
+                                  <span className='ml-3 block'>
+                                    Выберите макет
                                   </span>
-                                </>
-                              ) : (
-                                <span className='ml-3 block'>
-                                  Выберите макет
-                                </span>
-                              )}
-                            </span>
-                            <span className='ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none'>
-                              <SelectorIcon className='h-5 w-5 text-gray-400' />
-                            </span>
-                          </Listbox.Button>
+                                )}
+                              </span>
+                              <span className='ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none'>
+                                <SelectorIcon className='h-5 w-5 text-gray-400' />
+                              </span>
+                            </Listbox.Button>
 
-                          <Transition
-                            show={open}
-                            as={Fragment}
-                            leave='transition ease-in duration-100'
-                            leaveFrom='opacity-100'
-                            leaveTo='opacity-0'
-                          >
-                            <Listbox.Options
-                              static
-                              className='absolute z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none '
+                            <Transition
+                              show={open}
+                              as={Fragment}
+                              leave='transition ease-in duration-100'
+                              leaveFrom='opacity-100'
+                              leaveTo='opacity-0'
                             >
-                              {layoutMakerData.map(layout => (
-                                <Listbox.Option
-                                  key={layout.id}
-                                  className={({ active }) =>
-                                    classNames(
-                                      active
-                                        ? 'text-white bg-yellow-600'
-                                        : 'text-gray-900',
-                                      'cursor-default select-none relative py-2 pl-3 pr-9'
-                                    )
-                                  }
-                                  value={layout}
-                                >
-                                  {({ selected, active }) => (
-                                    <>
-                                      <div className='flex items-center'>
-                                        <GatsbyImage
-                                          image={layout.layout.gatsbyImageData}
-                                          alt=''
-                                          className='flex-shrink-0 h-6 w-6 rounded-full'
-                                        />
-                                        <span
-                                          className={classNames(
-                                            selected
-                                              ? 'font-semibold'
-                                              : 'font-normal',
-                                            'ml-3 block truncate'
-                                          )}
-                                        >
-                                          {layout.title} - {layout.price}₽
-                                        </span>
-                                      </div>
+                              <Listbox.Options
+                                static
+                                className='absolute z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none '
+                              >
+                                {layoutMakerData.map(layout => (
+                                  <Listbox.Option
+                                    key={layout.id}
+                                    className={({ active }) =>
+                                      classNames(
+                                        active
+                                          ? 'text-white bg-yellow-600'
+                                          : 'text-gray-900',
+                                        'cursor-default select-none relative py-2 pl-3 pr-9'
+                                      )
+                                    }
+                                    value={layout}
+                                  >
+                                    {({ selected, active }) => (
+                                      <>
+                                        <div className='flex items-center'>
+                                          <GatsbyImage
+                                            image={
+                                              layout.layout.gatsbyImageData
+                                            }
+                                            alt=''
+                                            className='flex-shrink-0 h-6 w-6 rounded-full'
+                                          />
+                                          <span
+                                            className={classNames(
+                                              selected
+                                                ? 'font-semibold'
+                                                : 'font-normal',
+                                              'ml-3 block truncate'
+                                            )}
+                                          >
+                                            {layout.title} - {layout.price}₽
+                                          </span>
+                                        </div>
 
-                                      {selected ? (
-                                        <span
-                                          className={classNames(
-                                            active
-                                              ? 'text-white'
-                                              : 'text-yellow-600',
-                                            'absolute inset-y-0 right-0 flex items-center pr-4'
-                                          )}
-                                        >
-                                          <CheckIcon
+                                        {selected ? (
+                                          <span
                                             className={classNames(
                                               active
                                                 ? 'text-white'
                                                 : 'text-yellow-600',
-                                              'h-5 w-5'
+                                              'absolute inset-y-0 right-0 flex items-center pr-4'
                                             )}
-                                          />
-                                        </span>
-                                      ) : null}
-                                    </>
-                                  )}
-                                </Listbox.Option>
-                              ))}
-                            </Listbox.Options>
-                          </Transition>
-                        </div>
-                      </>
-                    )}
-                  </Listbox>
+                                          >
+                                            <CheckIcon
+                                              className={classNames(
+                                                active
+                                                  ? 'text-white'
+                                                  : 'text-yellow-600',
+                                                'h-5 w-5'
+                                              )}
+                                            />
+                                          </span>
+                                        ) : null}
+                                      </>
+                                    )}
+                                  </Listbox.Option>
+                                ))}
+                              </Listbox.Options>
+                            </Transition>
+                          </div>
+                        </>
+                      )}
+                    </Listbox>
+                  )}{' '}
                 </div>
                 {selectedLayout && (
                   <LayoutMaker

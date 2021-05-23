@@ -60,6 +60,7 @@ export function Mail({ onClick }: IconProps) {
     </IconWrapper>
   )
 }
+
 export function MailSVG() {
   return (
     <svg
@@ -247,7 +248,7 @@ export function CheckIcon({ className }: { className: string }) {
   )
 }
 
-export function SelectorIcon({ className }: { className: string }) {
+export function SelectorIcon({ className = '' }: { className?: string }) {
   return (
     <svg
       version='1.1'

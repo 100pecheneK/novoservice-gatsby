@@ -326,6 +326,7 @@ export default function LayoutMaker({
 
       <div className='flex justify-center' ref={stageContainerRef}>
         <Stage
+          id='stage'
           ref={stageRef}
           width={stageWidth}
           height={stageHeight}
