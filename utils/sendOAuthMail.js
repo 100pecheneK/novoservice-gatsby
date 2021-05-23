@@ -1,9 +1,10 @@
 /**
  * здесь надо загераться https://console.cloud.google.com/apis/credentials/oauthclient/932993602522-jo89jsohmefkl3o57ph5id33jll6ughk.apps.googleusercontent.com?project=novoservice-312812
- * получить токен можно тут https://developers.google.com/oauthplayground/
  */
 require('dotenv').config()
 const nodemailer = require('nodemailer')
+const htmlToText = require('nodemailer-html-to-text').htmlToText
+
 const { google } = require('googleapis')
 
 const CLIENT_ID = process.env.OAuth_CLIENT_ID
@@ -49,6 +50,7 @@ async function sendOAuthMail(user, { options }) {
         accessToken,
       },
     })
+    // transporter.use('compile', htmlToText())
     const result = await transport.sendMail(options)
     transport.close()
     return result
