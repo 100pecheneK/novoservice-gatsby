@@ -8,6 +8,7 @@ import { GatsbyImage } from 'gatsby-plugin-image'
 import { Listbox, Transition } from '@headlessui/react'
 import downloadURI from '@utils/downloadURI'
 import classNames from '@utils/classNames'
+import { getSizes } from 'gatsby-plugin-image/dist/src/image-utils'
 
 type LayoutSelectorProps = {
   layoutMakerData: PageDataType['layouts']
@@ -42,6 +43,7 @@ export default function LayoutSelector({
   const [form, setForm] = useState({
     email: '',
     phone: '',
+    name: '',
   })
   function onFormChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm(prevForm => ({ ...prevForm, [e.target.name]: e.target.value }))
@@ -98,18 +100,20 @@ export default function LayoutSelector({
         const file = new File([blob], name)
         formData.append('images', file)
       }
-      const API_URL = 'http://localhost:5000/order'
+      const API_URL = 'https://photonovik-api.herokuapp.com/order'
 
       formData.append('data', JSON.stringify(order.data))
       formData.append('id', order.id)
       formData.append('email', form.email)
       formData.append('phone', form.phone)
+      formData.append('name', form.name)
+      formData.append('sizeSelectValue', sizeSelectValue)
       try {
         setLoading(true)
         const redirectUrl = await (
           await fetch(API_URL, { method: 'POST', body: formData })
         ).json()
-        console.log(redirectUrl)
+        window.open(redirectUrl, '_self')
       } catch (e) {
         console.log(e)
       } finally {
@@ -118,6 +122,10 @@ export default function LayoutSelector({
     }
     send()
   }
+  function onSizeChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    setSizeSelectValue(e.target.value)
+  }
+  const [sizeSelectValue, setSizeSelectValue] = useState('')
   return (
     <AnimateSharedLayout type='crossfade'>
       <motion.h3
@@ -164,6 +172,17 @@ export default function LayoutSelector({
                   {formVisible && (
                     <form onSubmit={sendOrder} className='grid gap-3 mt-3'>
                       <label className='relative w-full bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left grid gap-1'>
+                        Как к Вам обращаться?
+                        <input
+                          type='text'
+                          name='name'
+                          required
+                          value={form['name']}
+                          onChange={onFormChange}
+                          className={
+                            'relative bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left'
+                          }
+                        />
                         Почта
                         <input
                           type='email'
@@ -305,6 +324,21 @@ export default function LayoutSelector({
                     </Listbox>
                   )}{' '}
                 </div>
+                {selectedLayout?.sizes.length && (
+                  <>
+                    Размер{' '}
+                    <select
+                      onChange={onSizeChange}
+                      value={sizeSelectValue}
+                      name='size'
+                      className='cursor-pointer relative w-full bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left'
+                    >
+                      {selectedLayout?.sizes.map(size => (
+                        <option value={size}>{size}</option>
+                      ))}
+                    </select>
+                  </>
+                )}
                 {selectedLayout && (
                   <LayoutMaker
                     clip={{

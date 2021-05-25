@@ -1,7 +1,7 @@
-const getSettingsFromContentful = require('../utils/contentful')
+const { getSettingsFromContentful } = require('./contentful')
 const sendOAuthMail = require('../utils/sendOAuthMail')
 
-async function sendMail(recipient, subject, html, attachments=[]) {
+async function sendMail(recipient, subject, html, attachments = []) {
   const { email } = await getSettingsFromContentful()
 
   const options = {

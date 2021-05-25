@@ -95,7 +95,7 @@ exports.createPages = async ({ graphql, actions }) => {
           }
           title
           layouts {
-            id
+            id: contentful_id
             title
             layout {
               gatsbyImageData
@@ -113,6 +113,7 @@ exports.createPages = async ({ graphql, actions }) => {
             clipX
             clipY
             price
+            sizes
           }
         }
       }

@@ -28,6 +28,7 @@ export type LayoutType = {
   clipHeight: number
   clipWidth: number
   price: number
+  sizes: string[]
 }
 export type PageDataType = {
   link: string

@@ -1,10 +1,17 @@
 require('dotenv').config()
 const express = require('express')
-const sendMail = require('./service/sendMail')
+const sendMail = require('./services/sendMail')
 const upload = require('./utils/configuredMulter')
 const fs = require('fs')
 const cors = require('cors')
-const getFilesInfoInHTML = require('./utils/getFilesInfoInHTML')
+const generateHTMLFromFiles = require('./utils/generateHTMLFromFiles')
+const { nanoid } = require('nanoid')
+const { getProductFromContentfulById } = require('./services/contentful')
+const getFiles = require('./utils/getFiles')
+const { deleteOrder, getDataFromSave } = require('./utils/deleteOrder')
+const { getSettingsFromContentful } = require('./services/contentful')
+const generateHTMLFromOrder = require('./utils/generateHTMLFromOrder')
+const saveOrder = require('./utils/saveOrder')
 
 const app = express()
 app.use(express.json({ extended: false }))
@@ -13,74 +20,119 @@ app.get('/', (req, res) => {
   res.send('API RUNING!!!')
 })
 
-app.post('/sendMail', async (req, res) => {
-  try {
-    const recipient = 'mistermihail23@gmail.com'
-    const subject = 'Subject'
-    const text = 'Text'
-    const html = '<h1>Text</h1>'
-    const result = await sendMail(recipient, subject, text, html)
-    return res.json(result)
-  } catch (e) {
-    return res.json({ message: e.message })
-  }
-})
-
-function getQiwiRedirectURL({ successUrl, amount, clientEmail }) {
+function getQiwiRedirectURL({ successUrl, amount, clientEmail, account }) {
   const publickKey = process.env.QIWI_PUBLIC
-  const url = `https://oplata.qiwi.com/create?publicKey=${publickKey}&amount=${amount}&successUrl=${successUrl}&email=${clientEmail}&customFields[paySourcesFilter]=qw,card&lifetime=`
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = today.getMonth()
+  const day = today.getDate()
+  // ГГГГ-ММ-ДДTччмм
+  const lifetime = new Date(year, month, day + 3)
+    .toISOString()
+    .split(':')
+    .slice(0, -1)
+    .join('')
+
+  const url = `https://oplata.qiwi.com/create?publicKey=${publickKey}&amount=${amount}&successUrl=${successUrl}&email=${clientEmail}&account=${account}&customFields[paySourcesFilter]=qw,card&lifetime=${lifetime}`
   return encodeURI(url)
 }
-
-app.get('/money', async (req, res) => {
-  const qiwiRedirectURL = getQiwiRedirectURL({
-    successUrl: 'http://localhost',
-    amount: 1,
-    clientEmail: 'mistermihail23@gmail.com',
-  })
-  return res.json({ url: qiwiRedirectURL })
-})
+class PayError extends Error {}
+function checkPayStatus(status) {
+  const statuses = {
+    ok: ['PAID'],
+    error: ['REJECTED', 'EXPIRED'],
+  }
+  if (statuses.error.includes(status))
+    throw new PayError('Счет отклонен или не оплачен')
+  if (statuses.ok.includes(status)) return true
+  throw new Error('Неизвестный статус')
+}
 
 app.post('/money', async (req, res) => {
-  const recipient = 'mistermihail23@gmail.com'
-  const subject = 'Оплата'
-  const html = `<pre>${JSON.stringify(req.body, null, 4)}</pre>`
-  const result = await sendMail(recipient, subject, html)
-  return res.json(result)
+  const { bill } = req.body
+  const { email: recipient } = await getSettingsFromContentful()
+  const account = bill.customer.account
+  const order = JSON.parse(getDataFromSave(account).data)
+  const htmlOrder = generateHTMLFromOrder(order, account, bill.billId)
+  try {
+    checkPayStatus(bill.status.value)
+    const subject = 'Оплата'
+    await sendMail(
+      recipient,
+      'BILL',
+      `<pre>${JSON.stringify(req.body, null, 4)}</pre>`
+    )
+    await sendMail(
+      order.email,
+      subject,
+      `<b>Ваш номер заказа: ${account}</b><br><b>Код оплаты: ${bill.billId}</b>`
+    )
+    const mailResult = await sendMail(
+      recipient,
+      subject,
+      htmlOrder,
+      order.attachments
+    )
+    deleteOrder(account)
+    return res.json(mailResult)
+  } catch (e) {
+    if (e instanceof PayError) {
+      const subject = 'Ошибка оплаты'
+      const html = `<h2>${e.message}</h2>`
+      deleteOrder(account)
+      await sendMail(order.email, subject, html)
+    }
+    return res.status(500).send(e.message)
+  }
 })
 
 app.post('/order', upload.array('images'), async (req, res) => {
   try {
-    const { email, phone, id, data: jsonData } = req.body
-    const data = JSON.parse(jsonData)
-    const files = []
-    for (let i = 0; i < req.files.length; i++) {
-      const file = req.files[i]
-      const fileData = data[i]
-      files.push({
-        ...fileData,
-        filename: fileData.name,
-        path: file.path,
-      })
-    }
+    const account = nanoid()
+    const { email, phone, name, id, data: jsonData, size } = req.body
+    const {
+      fields: { price: amount, title: productTitle },
+    } = await getProductFromContentfulById(id)
 
-    const html = getFilesInfoInHTML(files)
+    const uploadedFiles = req.files
+    // ? mb send without stringify
+    const data = JSON.parse(jsonData)
+    const files = getFiles(uploadedFiles, data)
+    const fielsInfoHtml = generateHTMLFromFiles(files)
     const attachments = files.map(({ filename, path }) => ({
       filename,
       path,
     }))
-    const result = await sendMail(email, 'Order', html, attachments)
-    attachments.forEach(({ path }) =>
-      fs.unlink(path, err => {
+    const order = JSON.stringify({
+      email,
+      phone,
+      name,
+      size,
+      productTitle,
+      productId: id,
+      fielsInfoHtml,
+      attachments,
+    })
+    saveOrder(account, order)
+
+    const qiwiRedirectURL = getQiwiRedirectURL({
+      successUrl: 'https://novoservice.netlify.app/success',
+      amount,
+      clientEmail: email,
+      account,
+    })
+
+    return res.json({ url: qiwiRedirectURL })
+  } catch (e) {
+    console.log(e)
+    req.files.forEach(file =>
+      fs.unlink(file.path, err => {
         if (err) {
           console.error(err)
           return
         }
       })
     )
-    const redirectUrl = 'ссылка на оплату'
-    return res.json(result)
-  } catch (e) {
     return res.status(500).json({ error: e.message })
   }
 })
