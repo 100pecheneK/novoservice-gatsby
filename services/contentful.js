@@ -26,6 +26,7 @@ async function getSettingsFromContentful() {
     item => item.fields.serviceName === 'photonovik'
   ).fields.serviceSettings.fields
 
+
   return { email }
 }
 
@@ -35,4 +36,7 @@ async function getProductFromContentfulById(id) {
   return product
 }
 
-module.exports = getSettingsFromContentful
+module.exports = {
+  getSettingsFromContentful,
+  getProductFromContentfulById,
+}
