@@ -2,13 +2,11 @@ import Konva from 'konva'
 import React from 'react'
 import { Image, Text, Transformer } from 'react-konva'
 
-
-
 export default function ResizableText({
   isSelected,
   onSelect,
   onChange,
-  text
+  text,
 }) {
   const shapeRef = React.useRef()
   const trRef = React.useRef()

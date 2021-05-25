@@ -12,7 +12,6 @@ export default function LayoutImage({
 }) {
   const [image] = useImage(imageUrl, 'Anonymous')
   const [loading, setLoading] = React.useState(false)
-  console.log('loading', loading)
 
   React.useEffect(() => {
     setLoading(false)

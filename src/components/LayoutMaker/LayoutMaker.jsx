@@ -1,20 +1,17 @@
 import { nanoid } from 'nanoid'
 import React, { useEffect, useState, useRef } from 'react'
 import { Layer, Stage } from 'react-konva'
-import './LayoutMaker.css'
 import BackgroundImage from './BackgroundImage'
 import LayoutImage from './LayoutImage'
 import ResizableImage from './ResizableImage'
 import ResizableText from './ResizableText'
 
-const settings = {
-  initialResizeImage: {
-    x: 0,
-    y: 0,
-  },
-}
-
-export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
+export default function LayoutMaker({
+  onExport,
+  backgroundImage,
+  layoutImage,
+  clip,
+}) {
   const [stageWidth, setStageWidth] = useState(0)
   const [stageHeight, setStageHeight] = useState(0)
   const [selectedId, selectShape] = useState(null)
@@ -39,6 +36,11 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
       )
     )
   }, [stageContainerRef])
+  useEffect(() => {
+    if (!isExporting) return
+    exportStageToPng()
+    setIsExporting(false)
+  }, [isExporting])
   function updateOrderInputs() {
     setOrderInputs(prev => [...prev, nanoid()])
   }
@@ -48,8 +50,8 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
       ...prev,
       {
         orderNumber,
-        x: settings.initialResizeImage.x,
-        y: settings.initialResizeImage.y,
+        x: clip.clipX,
+        y: clip.clipY,
         id: nanoid(),
         height: 50,
         width: 100,
@@ -63,7 +65,6 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
     updateOrderInputs()
   }
   function changeFontSizeByOrderNumber(e, orderNumber) {
-    console.log(e.target.value)
     setFiles(prevFiles =>
       prevFiles.map(prevFile => {
         if (prevFile.orderNumber === orderNumber) {
@@ -77,7 +78,6 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
     )
   }
   function changeColorByOrderNumber(e, orderNumber) {
-    console.log(e.target.value)
     setFiles(prevFiles =>
       prevFiles.map(prevFile => {
         if (prevFile.orderNumber === orderNumber) {
@@ -131,8 +131,8 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
               return {
                 ...prevFile,
                 orderNumber,
-                x: settings.initialResizeImage.x,
-                y: settings.initialResizeImage.y,
+                x: clip.clipX,
+                y: clip.clipY,
                 img: img,
                 name: file.name,
                 file: reader.result,
@@ -151,8 +151,8 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
           ...prev,
           {
             orderNumber,
-            x: settings.initialResizeImage.x,
-            y: settings.initialResizeImage.y,
+            x: clip.clipX,
+            y: clip.clipY,
             img: img,
             id: nanoid(),
             name: file.name,
@@ -169,36 +169,41 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
     setFiles(prevFiles => prevFiles.filter(f => f.orderNumber !== orderNumber))
     setOrderInputs(prev => prev.filter(o => o !== orderNumber))
   }
-
   function handleExport() {
     selectShape(null)
     setIsExporting(true)
   }
   function exportStageToPng() {
     stageRef.current.children.shift()
+    console.log(stageRef.current)
     const exported = [
       {
-        type: 'layout',
+        data: {
+          type: 'layout',
+          name: 'layout.png',
+          width: stageRef.current.attrs.width,
+          height: stageRef.current.attrs.height,
+        },
         file: stageRef.current.toDataURL(),
-        name: 'layout.png',
       },
-      ...files.map((file, i) => ({
-        type: 'asset',
-        file: file.file,
-        name: `${i}-${file.name}`,
-        width: file.width,
-        height: file.height,
-        x: file.x,
-        y: file.y,
-      })),
+      ...files
+        .filter(f => f.type !== 'text')
+        .map((file, i) => {
+          return {
+            data: {
+              type: 'asset',
+              name: `${i}-${file.name}`,
+              width: file.width,
+              height: file.height,
+              x: file.x,
+              y: file.y,
+            },
+            file: file.file,
+          }
+        }),
     ]
     onExport(exported)
   }
-  useEffect(() => {
-    if (!isExporting) return
-    exportStageToPng()
-    setIsExporting(false)
-  }, [isExporting])
 
   return (
     <div>
@@ -321,6 +326,7 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
 
       <div className='flex justify-center' ref={stageContainerRef}>
         <Stage
+          id='stage'
           ref={stageRef}
           width={stageWidth}
           height={stageHeight}
@@ -336,7 +342,7 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
               imageUrl={backgroundImage}
             />
           </Layer>
-          <Layer layerName='resizableImages'>
+          <Layer layerName='layout'>
             <LayoutImage
               name='bg'
               setStageHeight={setStageHeight}
@@ -344,8 +350,15 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
               imageUrl={layoutImage}
               maxWidth={maxStageWidth}
             />
+          </Layer>
+          <Layer
+            layerName='resizableImages'
+            clipX={clip.clipX}
+            clipY={clip.clipY}
+            clipHeight={clip.clipHeight}
+            clipWidth={clip.clipWidth}
+          >
             {files.map((file, i) => {
-              console.log('{files.map -> file', file)
               if (file.type === 'text')
                 return (
                   <ResizableText
@@ -371,8 +384,8 @@ export default function MaketMaker({ onExport, backgroundImage, layoutImage }) {
               if (file.type === 'image')
                 return (
                   <ResizableImage
-                    stageHeight={stageHeight}
-                    stageWidth={stageWidth}
+                    stageHeight={clip.clipHeight}
+                    stageWidth={clip.clipWidth}
                     key={file.id}
                     file={file}
                     isSelected={file.id === selectedId}
