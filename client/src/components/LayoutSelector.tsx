@@ -110,10 +110,10 @@ export default function LayoutSelector({
       formData.append('sizeSelectValue', sizeSelectValue)
       try {
         setLoading(true)
-        const redirectUrl = await (
+        const {url} = await (
           await fetch(API_URL, { method: 'POST', body: formData })
         ).json()
-        window.open(redirectUrl, '_self')
+        window.open(url, '_self')
       } catch (e) {
         console.log(e)
       } finally {
