@@ -107,7 +107,7 @@ export default function LayoutSelector({
       formData.append('email', form.email)
       formData.append('phone', form.phone)
       formData.append('name', form.name)
-      formData.append('sizeSelectValue', sizeSelectValue)
+      formData.append('size', sizeSelectValue)
       try {
         setLoading(true)
         const {url} = await (
