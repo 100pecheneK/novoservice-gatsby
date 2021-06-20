@@ -1,14 +1,12 @@
 import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion'
 import { LayoutType, PageDataType } from 'interfaces'
-import React, { useState, Fragment, useEffect } from 'react'
+import React, { useState, Fragment, } from 'react'
 import { Close } from '@components/Icons'
 import LayoutMaker from '@components/LayoutMaker'
 import { CheckIcon, SelectorIcon } from '@components/Icons'
 import { GatsbyImage } from 'gatsby-plugin-image'
 import { Listbox, Transition } from '@headlessui/react'
-import downloadURI from '@utils/downloadURI'
 import classNames from '@utils/classNames'
-import { getSizes } from 'gatsby-plugin-image/dist/src/image-utils'
 
 type LayoutSelectorProps = {
   layoutMakerData: PageDataType['layouts']

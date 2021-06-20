@@ -1,8 +1,10 @@
 ---
+register: https://console.cloud.google.com/apis/credentials/oauthclient/932993602522-jo89jsohmefkl3o57ph5id33jll6ughk.apps.googleusercontent.com?project=novoservice-312812
 guide: https://www.youtube.com/watch?v=tGDn3V-mIOM
-OAuth_CLIENT_ID: 932993602522-jo89jsohmefkl3o57ph5id33jll6ughk.apps.googleusercontent.com
-OAuth_CLIENT_SECRET: pvf7B1LCf1jjE9Ik8CeyTviU
+OAuth_CLIENT_ID: 1086523655060-oqvc0hgrgeri3aluap8b965run43ork9.apps.googleusercontent.com
+OAuth_CLIENT_SECRET: N120IyzjbZNr10WVzzlh_dP_
 OAuth_REDIRECT_URI: http://localhost
+REFRESH: 1//0cJbBXKK-eGP3CgYIARAAGAwSNwF-L9IrVd56QuKyv3c5fgxaF7nsl5RZM2TceOBtT5_d_7ydETIkawZvxcmQNU09HL2ZBpcQrvg
 ---
 
 # Get code
@@ -14,11 +16,10 @@ include_granted_scopes=true&
 response_type=code&
 state=state_parameter_passthrough_value&
 redirect_uri=http://localhost&
-client_id=932993602522-jo89jsohmefkl3o57ph5id33jll6ughk.apps.googleusercontent.com
-
+client_id=778010059769-q478u3fe540ev6au7rhhrm8dpptn2coc.apps.googleusercontent.com
 # From url take code
 
-?state=state_parameter_passthrough_value&code=4%2F0AY0e-g5xjEVDBV4uQhsfS-54fzTw06nlrWZQcCILS3hKbeRRKfgrwHHH2tlWx-2L4nAQOQ&scope=https%3A%2F%2Fmail.google.com%2F#
+http://localhost/?state=state_parameter_passthrough_value&code=4/0AY0e-g6Vq_wAbmYHf0jBx8mMDYpVEKLlZkPeFt8thFY0fqCv_M0rRM53iv_lYsDe7AwEhg&scope=https://mail.google.com/
 
 > code like this 4%2F0AY0e-g5xjEVDBV4uQhsfS-54fzTw06nlrWZQcCILS3hKbeRRKfgrwHHH2tlWx-2L4nAQOQ
 
@@ -40,7 +41,7 @@ example:
 ```
 curl \
 --request POST \
---data "code=4%2F0AY0e-g4uDlDh5qBfvS35KAjOOWqGwtTIajO5LdeehZuNxvHTiczrIUFLYFWy93O3eal41g&client_id=932993602522-jo89jsohmefkl3o57ph5id33jll6ughk.apps.googleusercontent.com&client_secret=pvf7B1LCf1jjE9Ik8CeyTviU&redirect_uri=http://localhost&grant_type=authorization_code" \
+--data "code=4/0AY0e-g4DWtbpa6oA7Ni1XS96uJzAgBf1I8IiKVcEeNhpWltliJWITChiqu3j4Df7sInf-Q&client_id=778010059769-q478u3fe540ev6au7rhhrm8dpptn2coc.apps.googleusercontent.com&client_secret=3eIA4u7fOTbGzaDEWzHXUgoY&redirect_uri=http://localhost&grant_type=authorization_code" \
 https://oauth2.googleapis.com/token
 ```
 
