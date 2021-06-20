@@ -40,6 +40,7 @@ export default function LayoutSelector({
   const [order, setOrder] = useState<OrderType>()
   const [formVisible, setFormVisible] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [sizeSelectValue, setSizeSelectValue] = useState('')
   const [form, setForm] = useState({
     email: '',
     phone: '',
@@ -125,7 +126,7 @@ export default function LayoutSelector({
   function onSizeChange(e: React.ChangeEvent<HTMLSelectElement>) {
     setSizeSelectValue(e.target.value)
   }
-  const [sizeSelectValue, setSizeSelectValue] = useState('')
+  
   return (
     <AnimateSharedLayout type='crossfade'>
       <motion.h3
