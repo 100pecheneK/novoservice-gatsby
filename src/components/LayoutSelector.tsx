@@ -120,7 +120,7 @@ export default function LayoutSelector({
         const { url } = await (
           await fetch(API_URL, { method: 'POST', body: formData })
         ).json()
-        // window.open(url, '_self')
+        window.open(url, '_self')
       } catch (e) {
         console.log(e)
       } finally {
