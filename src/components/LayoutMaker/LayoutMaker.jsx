@@ -174,8 +174,6 @@ export default function LayoutMaker({
     setIsExporting(true)
   }
   function exportStageToPng() {
-    stageRef.current.children.shift()
-    console.log(stageRef.current)
     const exported = [
       {
         data: {
