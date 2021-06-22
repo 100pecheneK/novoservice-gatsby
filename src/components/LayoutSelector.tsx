@@ -1,14 +1,12 @@
 import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion'
 import { LayoutType, PageDataType } from 'interfaces'
-import React, { useState, Fragment, useEffect } from 'react'
+import React, { useState, Fragment } from 'react'
 import { Close } from '@components/Icons'
 import LayoutMaker from '@components/LayoutMaker'
 import { CheckIcon, SelectorIcon } from '@components/Icons'
 import { GatsbyImage } from 'gatsby-plugin-image'
 import { Listbox, Transition } from '@headlessui/react'
-import downloadURI from '@utils/downloadURI'
 import classNames from '@utils/classNames'
-import { getSizes } from 'gatsby-plugin-image/dist/src/image-utils'
 
 type LayoutSelectorProps = {
   layoutMakerData: PageDataType['layouts']
@@ -111,7 +109,7 @@ export default function LayoutSelector({
       formData.append('size', sizeSelectValue)
       try {
         setLoading(true)
-        const {url} = await (
+        const { url } = await (
           await fetch(API_URL, { method: 'POST', body: formData })
         ).json()
         window.open(url, '_self')
@@ -126,7 +124,7 @@ export default function LayoutSelector({
   function onSizeChange(e: React.ChangeEvent<HTMLSelectElement>) {
     setSizeSelectValue(e.target.value)
   }
-  
+
   return (
     <AnimateSharedLayout type='crossfade'>
       <motion.h3
@@ -325,7 +323,7 @@ export default function LayoutSelector({
                     </Listbox>
                   )}{' '}
                 </div>
-                {selectedLayout?.sizes.length && (
+                {selectedLayout?.sizes?.length && (
                   <>
                     Размер{' '}
                     <select
@@ -335,7 +333,9 @@ export default function LayoutSelector({
                       className='cursor-pointer relative w-full bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-left'
                     >
                       {selectedLayout?.sizes.map(size => (
-                        <option value={size}>{size}</option>
+                        <option key={size} value={size}>
+                          {size}
+                        </option>
                       ))}
                     </select>
                   </>
@@ -349,7 +349,6 @@ export default function LayoutSelector({
                       clipWidth: selectedLayout.clipWidth,
                     }}
                     onExport={onExport}
-                    backgroundImage={selectedLayout.background.file.url}
                     layoutImage={selectedLayout.layout.file.url}
                   />
                 )}
