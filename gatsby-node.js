@@ -103,11 +103,6 @@ exports.createPages = async ({ graphql, actions }) => {
                 url
               }
             }
-            background {
-              file {
-                url
-              }
-            }
             clipHeight
             clipWidth
             clipX
