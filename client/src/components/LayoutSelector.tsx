@@ -7,6 +7,7 @@ import { CheckIcon, SelectorIcon } from '@components/Icons'
 import { GatsbyImage } from 'gatsby-plugin-image'
 import { Listbox, Transition } from '@headlessui/react'
 import classNames from '@utils/classNames'
+import { useEffect } from 'react'
 
 type LayoutSelectorProps = {
   layoutMakerData: PageDataType['layouts']
@@ -43,7 +44,14 @@ export default function LayoutSelector({
     email: '',
     phone: '',
     name: '',
+    size: '',
   })
+  console.log(sizeSelectValue)
+
+  useEffect(() => {
+    if (!selectedLayout) return
+    setSizeSelectValue(selectedLayout?.sizes[0] || '')
+  }, [selectedLayout])
   function onFormChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm(prevForm => ({ ...prevForm, [e.target.name]: e.target.value }))
   }
@@ -85,7 +93,6 @@ export default function LayoutSelector({
     setSelectedLayout(null)
     openForm()
   }
-
   function sendOrder(e: React.FormEvent) {
     e.preventDefault()
     async function send() {
@@ -107,12 +114,13 @@ export default function LayoutSelector({
       formData.append('phone', form.phone)
       formData.append('name', form.name)
       formData.append('size', sizeSelectValue)
+
       try {
         setLoading(true)
         const { url } = await (
           await fetch(API_URL, { method: 'POST', body: formData })
         ).json()
-        window.open(url, '_self')
+        // window.open(url, '_self')
       } catch (e) {
         console.log(e)
       } finally {
