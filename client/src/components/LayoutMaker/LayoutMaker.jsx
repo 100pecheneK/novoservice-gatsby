@@ -333,15 +333,14 @@ export default function LayoutMaker({
           onMouseDown={checkDeselect}
           onTouchStart={checkDeselect}
           name='bg'
-          style={{ border: '1px solid black' }}
         >
-          <Layer layerName='background'>
+          {/* <Layer layerName='background'>
             <BackgroundImage
               width={stageWidth}
               height={stageHeight}
               imageUrl={backgroundImage}
             />
-          </Layer>
+          </Layer> */}
           <Layer layerName='layout'>
             <LayoutImage
               name='bg'
