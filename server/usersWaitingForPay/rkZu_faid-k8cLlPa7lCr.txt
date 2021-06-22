@@ -1,1 +1,0 @@
-{"email":"test@test.ru","phone":"+79961840210","name":"Михаил Притыкин","size":"iPhone XS","productTitle":"Чехол","productId":"2JqLcEDiJSHrEoQsMpqjvw","fielsInfoHtml":"<b>Имя:</b> layout.png<br>Ширина: 330<br>Высота: 330<br>","attachments":[{"filename":"layout.png","path":"upload/aca68133a5a98a28945f901337d3d0b9"}]}
